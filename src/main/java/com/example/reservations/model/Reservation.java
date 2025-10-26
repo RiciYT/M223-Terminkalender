@@ -12,8 +12,11 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +35,14 @@ public class Reservation {
     @NotBlank(message = "Location is required")
     private String location;
 
+    @NotNull(message = "Room number is required")
+    @Min(value = 101, message = "Room number must be between 101 and 105")
+    @Max(value = 105, message = "Room number must be between 101 and 105")
+    private Integer roomNumber;
+
     @Column(length = 1000)
+    @NotBlank(message = "Remarks are required")
+    @Size(min = 10, max = 200, message = "Remarks must be between 10 and 200 characters")
     private String description;
 
     @NotNull(message = "Start time is required")
@@ -47,6 +57,12 @@ public class Reservation {
     private ReservationAccess accessType = ReservationAccess.PUBLIC;
 
     private String accessCode;
+
+    @Column(unique = true)
+    private String publicKey;
+
+    @Column(unique = true)
+    private String privateKey;
 
     @Valid
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -129,5 +145,29 @@ public class Reservation {
     public void addParticipant(Participant participant) {
         participant.setReservation(this);
         participants.add(participant);
+    }
+
+    public Integer getRoomNumber() {
+        return roomNumber;
+    }
+
+    public void setRoomNumber(Integer roomNumber) {
+        this.roomNumber = roomNumber;
+    }
+
+    public String getPublicKey() {
+        return publicKey;
+    }
+
+    public void setPublicKey(String publicKey) {
+        this.publicKey = publicKey;
+    }
+
+    public String getPrivateKey() {
+        return privateKey;
+    }
+
+    public void setPrivateKey(String privateKey) {
+        this.privateKey = privateKey;
     }
 }

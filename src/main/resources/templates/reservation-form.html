@@ -33,8 +33,20 @@
     <input type="text" id="location" th:field="*{location}" placeholder="Conference room" required>
     <div class="field-error" th:if="${#fields.hasErrors('location')}" th:errors="*{location}"></div>
 
-    <label for="description">Description</label>
-    <textarea id="description" th:field="*{description}" rows="3" placeholder="Share any extra details"></textarea>
+    <label for="roomNumber">Room Number (101-105)</label>
+    <select id="roomNumber" th:field="*{roomNumber}" required>
+        <option value="">Select a room</option>
+        <option value="101">Room 101</option>
+        <option value="102">Room 102</option>
+        <option value="103">Room 103</option>
+        <option value="104">Room 104</option>
+        <option value="105">Room 105</option>
+    </select>
+    <div class="field-error" th:if="${#fields.hasErrors('roomNumber')}" th:errors="*{roomNumber}"></div>
+
+    <label for="description">Remarks (10-200 characters)</label>
+    <textarea id="description" th:field="*{description}" rows="3" placeholder="Enter remarks about the reservation (10-200 characters)" required></textarea>
+    <div class="field-error" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
 
     <label for="startTime">Start</label>
     <input type="datetime-local" id="startTime" th:field="*{startTime}" required>
@@ -57,19 +69,10 @@
 
     <section>
         <h2>Participants</h2>
-        <small>Provide names and emails. Leave unused slots blank.</small>
-        <div class="participant-group" th:each="participant,iterStat : *{participants}">
-            <h3 th:text="'Participant ' + ${iterStat.index + 1}">Participant</h3>
-            <label th:for="${'participants[' + iterStat.index + '].name'}">Name</label>
-            <input type="text" th:field="*{participants[__${iterStat.index}__].name}" placeholder="Jane Doe">
-            <div class="field-error" th:if="${#fields.hasErrors('participants[' + iterStat.index + '].name')}"
-                 th:errors="*{participants[__${iterStat.index}__].name}"></div>
-
-            <label th:for="${'participants[' + iterStat.index + '].email'}">Email</label>
-            <input type="email" th:field="*{participants[__${iterStat.index}__].email}" placeholder="jane@example.com">
-            <div class="field-error" th:if="${#fields.hasErrors('participants[' + iterStat.index + '].email')}"
-                 th:errors="*{participants[__${iterStat.index}__].email}"></div>
-        </div>
+        <small>Enter participant names separated by commas (e.g., "John Doe, Jane Smith, Max Müller")</small>
+        <label for="participantsText">Participant Names</label>
+        <textarea id="participantsText" th:field="*{participantsText}" rows="3" placeholder="John Doe, Jane Smith" required></textarea>
+        <div class="field-error" th:if="${#fields.hasErrors('participantsText')}" th:errors="*{participantsText}"></div>
     </section>
 
     <div class="form-actions">
