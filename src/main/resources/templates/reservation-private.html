@@ -35,16 +35,17 @@
     <div th:if="${authorized}">
         <div class="success">Access granted.</div>
         <p class="meta">Location: <span th:text="${reservation.location}">Room</span></p>
+        <p class="meta">Room Number: <span th:text="${reservation.roomNumber}">101</span></p>
         <p class="meta">Start: <span th:text="${#temporals.format(reservation.startTime, 'yyyy-MM-dd HH:mm')}">2024-01-01 09:00</span></p>
         <p class="meta">End: <span th:text="${#temporals.format(reservation.endTime, 'yyyy-MM-dd HH:mm')}">2024-01-01 10:00</span></p>
-        <p class="meta">Description:</p>
+        <p class="meta">Remarks:</p>
         <p th:text="${reservation.description}">Event description</p>
 
         <section>
             <h2>Participants</h2>
             <ul>
                 <li th:each="participant : ${reservation.participants}"
-                    th:text="${participant.name} + ' (' + ${participant.email} + ')'">Jane Doe (jane@example.com)</li>
+                    th:text="${participant.name}">Jane Doe</li>
             </ul>
         </section>
     </div>

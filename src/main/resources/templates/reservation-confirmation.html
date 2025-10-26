@@ -19,12 +19,22 @@
     <h1>Reservation Confirmed</h1>
     <p class="meta"><strong th:text="${reservation.title}">Event title</strong></p>
     <p class="meta">Location: <span th:text="${reservation.location}">Room</span></p>
+    <p class="meta">Room Number: <span th:text="${reservation.roomNumber}">101</span></p>
     <p class="meta">Start: <span th:text="${#temporals.format(reservation.startTime, 'yyyy-MM-dd HH:mm')}">2024-01-01 09:00</span></p>
     <p class="meta">End: <span th:text="${#temporals.format(reservation.endTime, 'yyyy-MM-dd HH:mm')}">2024-01-01 10:00</span></p>
     <p class="meta">Access: <span th:text="${reservation.accessType}">PUBLIC</span></p>
 
+    <section style="background: #e8f4fd; padding: 1rem; border-radius: 4px; margin: 1.5rem 0;">
+        <h2>Access Keys</h2>
+        <p><strong>Public Key</strong> (share with participants to view the reservation):</p>
+        <p class="code" th:text="${reservation.publicKey}">PUBLIC_KEY</p>
+        
+        <p style="margin-top: 1rem;"><strong>Private Key</strong> (keep secure - allows editing and deletion):</p>
+        <p class="code" th:text="${reservation.privateKey}">PRIVATE_KEY</p>
+    </section>
+
     <div th:if="${reservation.accessType.name() == 'PRIVATE'}">
-        <p>This reservation is private. Share the following code with invited guests:</p>
+        <p>This reservation is private. Additional access code required:</p>
         <p class="code" th:text="${reservation.accessCode}">SECRET</p>
     </div>
 
@@ -32,7 +42,7 @@
         <h2>Participants</h2>
         <ul>
             <li th:each="participant : ${reservation.participants}"
-                th:text="${participant.name} + ' (' + ${participant.email} + ')'">Jane Doe (jane@example.com)</li>
+                th:text="${participant.name}">Jane Doe</li>
         </ul>
     </section>
 

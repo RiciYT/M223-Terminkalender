@@ -6,6 +6,7 @@ import com.example.reservations.service.ReservationService;
 import com.example.reservations.web.dto.ReservationForm;
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -33,6 +34,29 @@ public class ReservationController {
     public String index(Model model) {
         List<Reservation> reservations = reservationService.findAll();
         model.addAttribute("reservations", reservations);
+        return "index";
+    }
+
+    @GetMapping("/access")
+    public String accessByKey(@RequestParam(value = "key", required = false) String key, Model model) {
+        if (key == null || key.isBlank()) {
+            model.addAttribute("error", "Please enter a valid access key");
+            return "index";
+        }
+
+        // Try public key first
+        Optional<Reservation> reservation = reservationService.findByPublicKey(key);
+        if (reservation.isPresent()) {
+            return "redirect:/reservations/" + reservation.get().getId() + "/public";
+        }
+
+        // Try private key
+        reservation = reservationService.findByPrivateKey(key);
+        if (reservation.isPresent()) {
+            return "redirect:/reservations/" + reservation.get().getId() + "/private?authorized=true";
+        }
+
+        model.addAttribute("error", "Invalid access key");
         return "index";
     }
 
@@ -84,10 +108,16 @@ public class ReservationController {
     @GetMapping("/reservations/{id}/private")
     public String privateView(@PathVariable Long id,
             @RequestParam(value = "code", required = false) String code,
+            @RequestParam(value = "authorized", required = false) Boolean authorized,
             Model model) {
         Reservation reservation = reservationService.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Reservation not found"));
         model.addAttribute("reservation", reservation);
+
+        if (Boolean.TRUE.equals(authorized)) {
+            model.addAttribute("authorized", true);
+            return "reservation-private";
+        }
 
         if (reservation.getAccessType() != ReservationAccess.PRIVATE) {
             model.addAttribute("error", "This reservation is public.");

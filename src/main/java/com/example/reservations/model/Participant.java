@@ -7,8 +7,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 
 @Entity
 @Table(name = "participants")
@@ -19,11 +19,8 @@ public class Participant {
     private Long id;
 
     @NotBlank(message = "Participant name is required")
+    @Pattern(regexp = "^[A-Za-zÄÖÜäöüß\\s]+$", message = "Name must only contain letters")
     private String name;
-
-    @Email(message = "Please provide a valid email")
-    @NotBlank(message = "Participant email is required")
-    private String email;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "reservation_id")
@@ -32,9 +29,8 @@ public class Participant {
     public Participant() {
     }
 
-    public Participant(String name, String email) {
+    public Participant(String name) {
         this.name = name;
-        this.email = email;
     }
 
     public Long getId() {
@@ -47,14 +43,6 @@ public class Participant {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public Reservation getReservation() {

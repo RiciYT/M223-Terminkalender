@@ -5,12 +5,17 @@ import com.example.reservations.model.Reservation;
 import com.example.reservations.model.ReservationAccess;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ReservationForm {
 
@@ -20,6 +25,13 @@ public class ReservationForm {
     @NotBlank(message = "Location is required")
     private String location;
 
+    @NotNull(message = "Room number is required")
+    @Min(value = 101, message = "Room number must be between 101 and 105")
+    @Max(value = 105, message = "Room number must be between 101 and 105")
+    private Integer roomNumber;
+
+    @NotBlank(message = "Remarks are required")
+    @Size(min = 10, max = 200, message = "Remarks must be between 10 and 200 characters")
     private String description;
 
     @NotNull(message = "Start time is required")
@@ -36,24 +48,17 @@ public class ReservationForm {
 
     private String accessCode;
 
-    @Valid
-    private List<ParticipantForm> participants = defaultParticipants();
+    @NotBlank(message = "Participants list is required")
+    private String participantsText;
 
     public ReservationForm() {
-    }
-
-    private static List<ParticipantForm> defaultParticipants() {
-        List<ParticipantForm> defaults = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
-            defaults.add(new ParticipantForm());
-        }
-        return defaults;
     }
 
     public Reservation toReservation() {
         Reservation reservation = new Reservation();
         reservation.setTitle(title);
         reservation.setLocation(location);
+        reservation.setRoomNumber(roomNumber);
         reservation.setDescription(description);
         reservation.setStartTime(startTime);
         reservation.setEndTime(endTime);
@@ -61,13 +66,12 @@ public class ReservationForm {
         reservation.setAccessCode(accessCode);
 
         List<Participant> participantEntities = new ArrayList<>();
-        if (participants != null) {
-            for (ParticipantForm participantForm : participants) {
-                if (participantForm.getName() != null && !participantForm.getName().isBlank()
-                        && participantForm.getEmail() != null && !participantForm.getEmail().isBlank()) {
-                    participantEntities.add(new Participant(participantForm.getName(), participantForm.getEmail()));
-                }
-            }
+        if (participantsText != null && !participantsText.isBlank()) {
+            participantEntities = Arrays.stream(participantsText.split(","))
+                    .map(String::trim)
+                    .filter(name -> !name.isEmpty())
+                    .map(Participant::new)
+                    .collect(Collectors.toList());
         }
         reservation.setParticipants(participantEntities);
         return reservation;
@@ -129,11 +133,19 @@ public class ReservationForm {
         this.accessCode = accessCode;
     }
 
-    public List<ParticipantForm> getParticipants() {
-        return participants;
+    public String getParticipantsText() {
+        return participantsText;
     }
 
-    public void setParticipants(List<ParticipantForm> participants) {
-        this.participants = participants;
+    public void setParticipantsText(String participantsText) {
+        this.participantsText = participantsText;
+    }
+
+    public Integer getRoomNumber() {
+        return roomNumber;
+    }
+
+    public void setRoomNumber(Integer roomNumber) {
+        this.roomNumber = roomNumber;
     }
 }
