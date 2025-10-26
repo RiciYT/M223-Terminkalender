@@ -2,7 +2,7 @@
 
 **Projekt:** M223 Terminkalender - Reservationssystem für Sitzungs- und Veranstaltungsräume  
 **Version:** 1.0  
-**Datum:** Oktober 2025  
+**Datum:** Oktober 2024  
 **Modul:** 223 – Multiuser-Applikationen objektorientiert realisieren
 
 ---

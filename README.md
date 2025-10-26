@@ -207,6 +207,6 @@ Alle Anforderungen des Projektauftrags wurden erfolgreich implementiert und gete
 ---
 
 **Version**: 1.0  
-**Datum**: Oktober 2025  
+**Datum**: Oktober 2024  
 **Modul**: M223 – Multiuser-Applikationen objektorientiert realisieren
 

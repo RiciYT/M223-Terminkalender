@@ -288,6 +288,6 @@ Alle **PRIORITÄT 1** Anforderungen wurden vollständig implementiert und getest
 
 ---
 
-**Erstellt am:** 26. Oktober 2025  
+**Erstellt am:** 26. Oktober 2024  
 **Version:** 1.0  
 **Modul:** M223 – Multiuser-Applikationen objektorientiert realisieren
