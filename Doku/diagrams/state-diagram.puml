@@ -1,0 +1,40 @@
+@startuml
+title Zustandsdiagramm - M223 Terminkalender Navigation
+
+[*] --> Index : Start
+
+Index --> CreateForm : Click "Create Reservation"
+Index --> KeyAccess : Enter Key
+
+CreateForm --> Confirmation : Submit valid form
+CreateForm --> CreateForm : Validation error
+
+Confirmation --> Index : Back to overview
+Confirmation --> PublicView : Open public page
+Confirmation --> PrivateView : Open private page
+
+KeyAccess --> PublicView : Valid public key
+KeyAccess --> PrivateView : Valid private key
+KeyAccess --> Index : Invalid key
+
+PublicView --> Index : Back
+PrivateView --> Index : Back
+PrivateView --> EditForm : Edit (with private key)
+PrivateView --> Index : Delete (with confirmation)
+
+EditForm --> Confirmation : Update successful
+EditForm --> EditForm : Validation error
+
+note right of KeyAccess
+  Decision: 
+  - Public Key → Read-only view
+  - Private Key → Management view
+end note
+
+note right of PrivateView
+  Only accessible with:
+  - Private key (full management)
+  - OR access code (view only)
+end note
+
+@enduml
