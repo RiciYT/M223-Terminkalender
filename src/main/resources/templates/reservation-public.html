@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Public Reservation</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2rem; background: #f6f7fb; }
+        .card { background: #fff; padding: 2rem; border-radius: 6px; max-width: 640px; margin: auto; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        h1 { color: #2d3e50; }
+        .meta { margin: 0.5rem 0; color: #4a5d75; }
+        ul { padding-left: 1.25rem; }
+        .alert { background: #fbeaea; color: #8a1f1f; padding: 0.75rem; border-radius: 4px; margin-bottom: 1rem; }
+        a { color: #2d89ef; text-decoration: none; }
+    </style>
+</head>
+<body>
+<div class="card">
+    <div th:if="${error}" class="alert" th:text="${error}">This reservation is private.</div>
+
+    <div th:if="${reservation != null}">
+        <h1 th:text="${reservation.title}">Event Title</h1>
+        <p class="meta">Location: <span th:text="${reservation.location}">Room</span></p>
+        <p class="meta">Start: <span th:text="${#temporals.format(reservation.startTime, 'yyyy-MM-dd HH:mm')}">2024-01-01 09:00</span></p>
+        <p class="meta">End: <span th:text="${#temporals.format(reservation.endTime, 'yyyy-MM-dd HH:mm')}">2024-01-01 10:00</span></p>
+        <p class="meta">Description:</p>
+        <p th:text="${reservation.description}">Event details...</p>
+
+        <section>
+            <h2>Participants</h2>
+            <ul>
+                <li th:each="participant : ${reservation.participants}"
+                    th:text="${participant.name} + ' (' + ${participant.email} + ')'">Jane Doe (jane@example.com)</li>
+            </ul>
+        </section>
+    </div>
+
+    <p style="margin-top: 1.5rem;"><a th:href="@{/}">Back to overview</a></p>
+</div>
+
+</body>
+</html>

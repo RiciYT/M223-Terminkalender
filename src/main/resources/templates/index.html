@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Reservation Calendar</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2rem; background-color: #f5f6f8; }
+        h1 { color: #2d3e50; }
+        table { width: 100%; border-collapse: collapse; margin-top: 1.5rem; background: #fff; }
+        th, td { border: 1px solid #d9dce1; padding: 0.75rem; text-align: left; }
+        th { background-color: #f0f2f5; }
+        a.button { display: inline-block; padding: 0.5rem 1rem; margin-top: 1rem; background-color: #2d89ef; color: #fff; text-decoration: none; border-radius: 4px; }
+        a.button:hover { background-color: #1b5fbd; }
+        .actions a { margin-right: 0.5rem; }
+        .empty { margin-top: 2rem; color: #555; font-style: italic; }
+    </style>
+</head>
+<body>
+<h1>Reservation Calendar</h1>
+
+<a class="button" th:href="@{/reservations/new}">Create Reservation</a>
+
+<div th:if="${#lists.isEmpty(reservations)}" class="empty">
+    There are no reservations yet. Use the button above to add the first one.
+</div>
+
+<table th:if="${!#lists.isEmpty(reservations)}">
+    <thead>
+    <tr>
+        <th>Title</th>
+        <th>Location</th>
+        <th>Start</th>
+        <th>End</th>
+        <th>Access</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="reservation : ${reservations}">
+        <td th:text="${reservation.title}">Team Sync</td>
+        <td th:text="${reservation.location}">Room A</td>
+        <td th:text="${#temporals.format(reservation.startTime, 'yyyy-MM-dd HH:mm')}">2024-01-01 09:00</td>
+        <td th:text="${#temporals.format(reservation.endTime, 'yyyy-MM-dd HH:mm')}">2024-01-01 10:00</td>
+        <td th:text="${reservation.accessType}">PUBLIC</td>
+        <td class="actions">
+            <a th:href="@{'/reservations/' + ${reservation.id} + '/confirm'}">Confirmation</a>
+            <a th:if="${reservation.accessType.name() == 'PUBLIC'}"
+               th:href="@{'/reservations/' + ${reservation.id} + '/public'}">Public view</a>
+            <a th:if="${reservation.accessType.name() == 'PRIVATE'}"
+               th:href="@{'/reservations/' + ${reservation.id} + '/private'}">Private access</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
