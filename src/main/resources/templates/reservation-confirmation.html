@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Reservation Confirmation</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2rem; background-color: #f0f3f8; }
+        .card { background: #fff; padding: 2rem; border-radius: 6px; max-width: 640px; margin: auto; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        h1 { color: #2d3e50; }
+        .meta { margin: 0.5rem 0; color: #3a4b63; }
+        ul { padding-left: 1.25rem; }
+        .actions { margin-top: 1.5rem; }
+        .actions a { margin-right: 1rem; text-decoration: none; color: #2d89ef; }
+        .code { font-weight: bold; color: #c0392b; }
+    </style>
+</head>
+<body>
+<div class="card">
+    <h1>Reservation Confirmed</h1>
+    <p class="meta"><strong th:text="${reservation.title}">Event title</strong></p>
+    <p class="meta">Location: <span th:text="${reservation.location}">Room</span></p>
+    <p class="meta">Start: <span th:text="${#temporals.format(reservation.startTime, 'yyyy-MM-dd HH:mm')}">2024-01-01 09:00</span></p>
+    <p class="meta">End: <span th:text="${#temporals.format(reservation.endTime, 'yyyy-MM-dd HH:mm')}">2024-01-01 10:00</span></p>
+    <p class="meta">Access: <span th:text="${reservation.accessType}">PUBLIC</span></p>
+
+    <div th:if="${reservation.accessType.name() == 'PRIVATE'}">
+        <p>This reservation is private. Share the following code with invited guests:</p>
+        <p class="code" th:text="${reservation.accessCode}">SECRET</p>
+    </div>
+
+    <section>
+        <h2>Participants</h2>
+        <ul>
+            <li th:each="participant : ${reservation.participants}"
+                th:text="${participant.name} + ' (' + ${participant.email} + ')'">Jane Doe (jane@example.com)</li>
+        </ul>
+    </section>
+
+    <div class="actions">
+        <a th:href="@{/}">Back to overview</a>
+        <a th:if="${reservation.accessType.name() == 'PUBLIC'}"
+           th:href="@{'/reservations/' + ${reservation.id} + '/public'}">Open public page</a>
+        <a th:if="${reservation.accessType.name() == 'PRIVATE'}"
+           th:href="@{'/reservations/' + ${reservation.id} + '/private'}">Open private page</a>
+    </div>
+</div>
+
+</body>
+</html>

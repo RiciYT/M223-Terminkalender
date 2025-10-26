@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Private Reservation</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2rem; background: #f2f4f8; }
+        .card { background: #fff; padding: 2rem; border-radius: 6px; max-width: 640px; margin: auto; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        h1 { color: #2d3e50; }
+        .meta { margin: 0.5rem 0; color: #4a5d75; }
+        ul { padding-left: 1.25rem; }
+        form { margin-top: 1rem; }
+        label { display: block; font-weight: bold; }
+        input[type="text"] { width: 100%; padding: 0.5rem; border: 1px solid #ccd3dc; border-radius: 4px; margin-top: 0.25rem; }
+        button { margin-top: 0.75rem; padding: 0.5rem 1rem; background: #2d89ef; color: #fff; border: none; border-radius: 4px; cursor: pointer; }
+        .alert { background: #fbeaea; color: #8a1f1f; padding: 0.75rem; border-radius: 4px; margin-bottom: 1rem; }
+        .success { background: #e7f4ea; color: #216e39; padding: 0.75rem; border-radius: 4px; margin-bottom: 1rem; }
+        a { color: #2d89ef; text-decoration: none; }
+    </style>
+</head>
+<body>
+<div class="card">
+    <h1 th:text="${reservation != null ? reservation.title : 'Private reservation'}">Private reservation</h1>
+
+    <div th:if="${error}" class="alert" th:text="${error}">Enter the access code.</div>
+
+    <form th:if="${reservation != null && authorized != true}"
+          th:action="@{'/reservations/' + ${reservation.id} + '/private'}" method="get">
+        <input type="hidden" name="id" th:value="${reservation.id}">
+        <label for="code">Access code</label>
+        <input type="text" id="code" name="code" placeholder="Enter the shared code" required>
+        <button type="submit">View reservation</button>
+    </form>
+
+    <div th:if="${authorized}">
+        <div class="success">Access granted.</div>
+        <p class="meta">Location: <span th:text="${reservation.location}">Room</span></p>
+        <p class="meta">Start: <span th:text="${#temporals.format(reservation.startTime, 'yyyy-MM-dd HH:mm')}">2024-01-01 09:00</span></p>
+        <p class="meta">End: <span th:text="${#temporals.format(reservation.endTime, 'yyyy-MM-dd HH:mm')}">2024-01-01 10:00</span></p>
+        <p class="meta">Description:</p>
+        <p th:text="${reservation.description}">Event description</p>
+
+        <section>
+            <h2>Participants</h2>
+            <ul>
+                <li th:each="participant : ${reservation.participants}"
+                    th:text="${participant.name} + ' (' + ${participant.email} + ')'">Jane Doe (jane@example.com)</li>
+            </ul>
+        </section>
+    </div>
+
+    <p style="margin-top: 1.5rem;"><a th:href="@{/}">Back to overview</a></p>
+</div>
+
+</body>
+</html>

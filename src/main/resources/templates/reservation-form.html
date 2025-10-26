@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Reservation</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2rem; background-color: #f5f6f8; }
+        h1 { color: #2d3e50; }
+        form { background: #fff; padding: 2rem; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        label { display: block; margin-top: 1rem; font-weight: bold; }
+        input, textarea, select { width: 100%; padding: 0.5rem; margin-top: 0.25rem; border: 1px solid #ccd3dc; border-radius: 4px; }
+        .field-error { color: #d93025; font-size: 0.9rem; margin-top: 0.25rem; }
+        .form-actions { margin-top: 1.5rem; }
+        .form-actions button { background-color: #2d89ef; color: #fff; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; }
+        .form-actions a { margin-left: 1rem; text-decoration: none; color: #2d3e50; }
+        .global-error { background: #fbeaea; color: #8a1f1f; padding: 0.75rem; border-radius: 4px; margin-bottom: 1rem; }
+        .participant-group { border: 1px solid #d9dce1; padding: 1rem; margin-top: 1rem; border-radius: 4px; background: #fafbfc; }
+        .participant-group h3 { margin-top: 0; font-size: 1.05rem; color: #2d3e50; }
+        small { display: block; color: #6b7a90; }
+    </style>
+</head>
+<body>
+<h1>Create a Reservation</h1>
+
+<form th:action="@{/reservations}" th:object="${reservationForm}" method="post">
+    <div th:if="${#fields.hasGlobalErrors()}" class="global-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">Error</div>
+
+    <label for="title">Title</label>
+    <input type="text" id="title" th:field="*{title}" placeholder="Team sync meeting" required>
+    <div class="field-error" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
+
+    <label for="location">Location</label>
+    <input type="text" id="location" th:field="*{location}" placeholder="Conference room" required>
+    <div class="field-error" th:if="${#fields.hasErrors('location')}" th:errors="*{location}"></div>
+
+    <label for="description">Description</label>
+    <textarea id="description" th:field="*{description}" rows="3" placeholder="Share any extra details"></textarea>
+
+    <label for="startTime">Start</label>
+    <input type="datetime-local" id="startTime" th:field="*{startTime}" required>
+    <div class="field-error" th:if="${#fields.hasErrors('startTime')}" th:errors="*{startTime}"></div>
+
+    <label for="endTime">End</label>
+    <input type="datetime-local" id="endTime" th:field="*{endTime}" required>
+    <div class="field-error" th:if="${#fields.hasErrors('endTime')}" th:errors="*{endTime}"></div>
+
+    <label for="accessType">Access Type</label>
+    <select id="accessType" th:field="*{accessType}">
+        <option th:each="type : ${accessTypes}" th:value="${type}" th:text="${type}">PUBLIC</option>
+    </select>
+    <small>Select "PRIVATE" to restrict access with a code.</small>
+    <div class="field-error" th:if="${#fields.hasErrors('accessType')}" th:errors="*{accessType}"></div>
+
+    <label for="accessCode">Access Code</label>
+    <input type="text" id="accessCode" th:field="*{accessCode}" placeholder="Required for private reservations">
+    <div class="field-error" th:if="${#fields.hasErrors('accessCode')}" th:errors="*{accessCode}"></div>
+
+    <section>
+        <h2>Participants</h2>
+        <small>Provide names and emails. Leave unused slots blank.</small>
+        <div class="participant-group" th:each="participant,iterStat : *{participants}">
+            <h3 th:text="'Participant ' + ${iterStat.index + 1}">Participant</h3>
+            <label th:for="${'participants[' + iterStat.index + '].name'}">Name</label>
+            <input type="text" th:field="*{participants[__${iterStat.index}__].name}" placeholder="Jane Doe">
+            <div class="field-error" th:if="${#fields.hasErrors('participants[' + iterStat.index + '].name')}"
+                 th:errors="*{participants[__${iterStat.index}__].name}"></div>
+
+            <label th:for="${'participants[' + iterStat.index + '].email'}">Email</label>
+            <input type="email" th:field="*{participants[__${iterStat.index}__].email}" placeholder="jane@example.com">
+            <div class="field-error" th:if="${#fields.hasErrors('participants[' + iterStat.index + '].email')}"
+                 th:errors="*{participants[__${iterStat.index}__].email}"></div>
+        </div>
+    </section>
+
+    <div class="form-actions">
+        <button type="submit">Save Reservation</button>
+        <a th:href="@{/}">Cancel</a>
+    </div>
+</form>
+
+</body>
+</html>
