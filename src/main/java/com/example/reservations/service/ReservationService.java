@@ -56,6 +56,10 @@ public class ReservationService {
     }
 
     private void validateReservation(Reservation reservation) {
+        validateReservation(reservation, null);
+    }
+
+    private void validateReservation(Reservation reservation, Long excludeId) {
         LocalDateTime start = reservation.getStartTime();
         LocalDateTime end = reservation.getEndTime();
 
@@ -69,8 +73,15 @@ public class ReservationService {
 
         Integer roomNumber = reservation.getRoomNumber();
         if (roomNumber != null) {
-            boolean conflict = reservationRepository.existsByRoomNumberAndStartTimeLessThanAndEndTimeGreaterThan(
-                    roomNumber, end, start);
+            // Check for conflicts, but exclude the current reservation if updating
+            boolean conflict = reservationRepository.findAll().stream()
+                    .filter(r -> !r.getId().equals(excludeId)) // Exclude current reservation
+                    .filter(r -> r.getRoomNumber().equals(roomNumber))
+                    .anyMatch(r -> {
+                        // Check if time ranges overlap
+                        return start.isBefore(r.getEndTime()) && end.isAfter(r.getStartTime());
+                    });
+            
             if (conflict) {
                 throw new IllegalStateException("The selected room and time slot conflicts with an existing reservation");
             }
@@ -94,5 +105,46 @@ public class ReservationService {
 
     public Optional<Reservation> findByPrivateKey(String privateKey) {
         return reservationRepository.findByPrivateKey(privateKey);
+    }
+
+    @Transactional
+    public Reservation updateReservation(Long id, String privateKey, Reservation updatedData) {
+        Reservation existing = reservationRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Reservation not found"));
+
+        // Autorisierung
+        if (!privateKey.equals(existing.getPrivateKey())) {
+            throw new IllegalArgumentException("Invalid private key");
+        }
+
+        // Daten aktualisieren
+        existing.setTitle(updatedData.getTitle());
+        existing.setLocation(updatedData.getLocation());
+        existing.setRoomNumber(updatedData.getRoomNumber());
+        existing.setDescription(updatedData.getDescription());
+        existing.setStartTime(updatedData.getStartTime());
+        existing.setEndTime(updatedData.getEndTime());
+        existing.setAccessType(updatedData.getAccessType());
+        existing.setAccessCode(updatedData.getAccessCode());
+
+        // Teilnehmer ersetzen
+        existing.getParticipants().clear();
+        updatedData.getParticipants().forEach(existing::addParticipant);
+
+        // Erneut validieren (exclude current reservation from conflict check)
+        validateReservation(existing, id);
+        return reservationRepository.save(existing);
+    }
+
+    @Transactional
+    public void deleteReservation(Long id, String privateKey) {
+        Reservation reservation = reservationRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Reservation not found"));
+
+        if (!privateKey.equals(reservation.getPrivateKey())) {
+            throw new IllegalArgumentException("Invalid private key");
+        }
+
+        reservationRepository.delete(reservation);
     }
 }

@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Create Reservation</title>
+    <title th:text="${editMode ? 'Edit Reservation' : 'Create Reservation'}">Create Reservation</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 2rem; background-color: #f5f6f8; }
         h1 { color: #2d3e50; }
@@ -20,9 +20,10 @@
     </style>
 </head>
 <body>
-<h1>Create a Reservation</h1>
+<h1 th:text="${editMode ? 'Edit Reservation' : 'Create Reservation'}">Create a Reservation</h1>
 
-<form th:action="@{/reservations}" th:object="${reservationForm}" method="post">
+<form th:action="${editMode ? '/reservations/' + reservationId : '/reservations'}" th:object="${reservationForm}" method="post">
+    <input type="hidden" th:if="${editMode}" name="key" th:value="${privateKey}">
     <div th:if="${#fields.hasGlobalErrors()}" class="global-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">Error</div>
 
     <label for="title">Title</label>
@@ -76,7 +77,7 @@
     </section>
 
     <div class="form-actions">
-        <button type="submit">Save Reservation</button>
+        <button type="submit" th:text="${editMode ? 'Update Reservation' : 'Save Reservation'}">Save Reservation</button>
         <a th:href="@{/}">Cancel</a>
     </div>
 </form>

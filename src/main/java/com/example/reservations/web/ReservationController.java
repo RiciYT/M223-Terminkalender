@@ -50,10 +50,10 @@ public class ReservationController {
             return "redirect:/reservations/" + reservation.get().getId() + "/public";
         }
 
-        // Try private key
+        // Try private key - WICHTIG: key als Parameter weitergeben!
         reservation = reservationService.findByPrivateKey(key);
         if (reservation.isPresent()) {
-            return "redirect:/reservations/" + reservation.get().getId() + "/private?authorized=true";
+            return "redirect:/reservations/" + reservation.get().getId() + "/private?authorized=true&key=" + key;
         }
 
         model.addAttribute("error", "Invalid access key");
@@ -105,17 +105,80 @@ public class ReservationController {
         return "reservation-public";
     }
 
+    @GetMapping("/reservations/{id}/edit")
+    public String editReservation(@PathVariable Long id,
+                                   @RequestParam String key,
+                                   Model model) {
+        Reservation reservation = reservationService.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Reservation not found"));
+
+        // Autorisierung prüfen
+        if (!key.equals(reservation.getPrivateKey())) {
+            model.addAttribute("error", "Invalid private key");
+            return "redirect:/";
+        }
+
+        // Formular vorbefüllen
+        ReservationForm form = ReservationForm.fromReservation(reservation);
+        model.addAttribute("reservationForm", form);
+        model.addAttribute("reservationId", id);
+        model.addAttribute("privateKey", key);
+        model.addAttribute("editMode", true);
+        return "reservation-form";
+    }
+
+    @PostMapping("/reservations/{id}")
+    public String updateReservation(@PathVariable Long id,
+                                     @RequestParam String key,
+                                     @Valid @ModelAttribute("reservationForm") ReservationForm form,
+                                     BindingResult bindingResult,
+                                     Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("reservationId", id);
+            model.addAttribute("privateKey", key);
+            model.addAttribute("editMode", true);
+            return "reservation-form";
+        }
+
+        try {
+            Reservation updated = reservationService.updateReservation(id, key, form.toReservation());
+            return "redirect:/reservations/" + updated.getId() + "/confirm";
+        } catch (IllegalArgumentException | IllegalStateException ex) {
+            bindingResult.reject("reservation.error", ex.getMessage());
+            model.addAttribute("reservationId", id);
+            model.addAttribute("privateKey", key);
+            model.addAttribute("editMode", true);
+            return "reservation-form";
+        }
+    }
+
+    @PostMapping("/reservations/{id}/delete")
+    public String deleteReservation(@PathVariable Long id,
+                                     @RequestParam String key,
+                                     Model model) {
+        try {
+            reservationService.deleteReservation(id, key);
+            model.addAttribute("success", "Reservation successfully deleted");
+            return "redirect:/";
+        } catch (IllegalArgumentException ex) {
+            model.addAttribute("error", ex.getMessage());
+            return "redirect:/reservations/" + id + "/private?authorized=true&key=" + key;
+        }
+    }
+
     @GetMapping("/reservations/{id}/private")
     public String privateView(@PathVariable Long id,
             @RequestParam(value = "code", required = false) String code,
             @RequestParam(value = "authorized", required = false) Boolean authorized,
+            @RequestParam(value = "key", required = false) String key,
             Model model) {
         Reservation reservation = reservationService.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Reservation not found"));
         model.addAttribute("reservation", reservation);
 
-        if (Boolean.TRUE.equals(authorized)) {
+        if (Boolean.TRUE.equals(authorized) && key != null) {
             model.addAttribute("authorized", true);
+            model.addAttribute("privateKey", key);
             return "reservation-private";
         }
 
