@@ -33,7 +33,7 @@
     </form>
 
     <div th:if="${authorized}">
-        <div class="success">Access granted.</div>
+        <div class="success" th:text="${privateKey != null ? 'Access granted with private key. You can manage this reservation.' : 'Access granted.'}">Access granted.</div>
         <p class="meta">Location: <span th:text="${reservation.location}">Room</span></p>
         <p class="meta">Room Number: <span th:text="${reservation.roomNumber}">101</span></p>
         <p class="meta">Start: <span th:text="${#temporals.format(reservation.startTime, 'yyyy-MM-dd HH:mm')}">2024-01-01 09:00</span></p>
@@ -48,6 +48,24 @@
                     th:text="${participant.name}">Jane Doe</li>
             </ul>
         </section>
+
+        <div th:if="${privateKey != null}" style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #d9dce1;">
+            <h3>Manage Reservation</h3>
+            <a th:href="@{'/reservations/' + ${reservation.id} + '/edit?key=' + ${privateKey}}"
+               style="display: inline-block; padding: 0.5rem 1rem; background: #f39c12; color: #fff; border-radius: 4px; text-decoration: none; margin-right: 0.5rem;">
+                Edit Reservation
+            </a>
+
+            <form th:action="@{'/reservations/' + ${reservation.id} + '/delete'}" method="post"
+                  style="display: inline-block;"
+                  onsubmit="return confirm('Are you sure you want to delete this reservation? This action cannot be undone.')">
+                <input type="hidden" name="key" th:value="${privateKey}">
+                <button type="submit"
+                        style="padding: 0.5rem 1rem; background: #e74c3c; color: #fff; border: none; border-radius: 4px; cursor: pointer;">
+                    Delete Reservation
+                </button>
+            </form>
+        </div>
     </div>
 
     <p style="margin-top: 1.5rem;"><a th:href="@{/}">Back to overview</a></p>

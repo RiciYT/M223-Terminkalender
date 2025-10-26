@@ -148,4 +148,24 @@ public class ReservationForm {
     public void setRoomNumber(Integer roomNumber) {
         this.roomNumber = roomNumber;
     }
+
+    public static ReservationForm fromReservation(Reservation reservation) {
+        ReservationForm form = new ReservationForm();
+        form.setTitle(reservation.getTitle());
+        form.setLocation(reservation.getLocation());
+        form.setRoomNumber(reservation.getRoomNumber());
+        form.setDescription(reservation.getDescription());
+        form.setStartTime(reservation.getStartTime());
+        form.setEndTime(reservation.getEndTime());
+        form.setAccessType(reservation.getAccessType());
+        form.setAccessCode(reservation.getAccessCode());
+
+        // Teilnehmer als Komma-String
+        String participants = reservation.getParticipants().stream()
+                .map(Participant::getName)
+                .collect(Collectors.joining(", "));
+        form.setParticipantsText(participants);
+
+        return form;
+    }
 }

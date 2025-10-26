@@ -95,4 +95,45 @@ public class ReservationService {
     public Optional<Reservation> findByPrivateKey(String privateKey) {
         return reservationRepository.findByPrivateKey(privateKey);
     }
+
+    @Transactional
+    public Reservation updateReservation(Long id, String privateKey, Reservation updatedData) {
+        Reservation existing = reservationRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Reservation not found"));
+
+        // Autorisierung
+        if (!privateKey.equals(existing.getPrivateKey())) {
+            throw new IllegalArgumentException("Invalid private key");
+        }
+
+        // Daten aktualisieren
+        existing.setTitle(updatedData.getTitle());
+        existing.setLocation(updatedData.getLocation());
+        existing.setRoomNumber(updatedData.getRoomNumber());
+        existing.setDescription(updatedData.getDescription());
+        existing.setStartTime(updatedData.getStartTime());
+        existing.setEndTime(updatedData.getEndTime());
+        existing.setAccessType(updatedData.getAccessType());
+        existing.setAccessCode(updatedData.getAccessCode());
+
+        // Teilnehmer ersetzen
+        existing.getParticipants().clear();
+        updatedData.getParticipants().forEach(existing::addParticipant);
+
+        // Erneut validieren
+        validateReservation(existing);
+        return reservationRepository.save(existing);
+    }
+
+    @Transactional
+    public void deleteReservation(Long id, String privateKey) {
+        Reservation reservation = reservationRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Reservation not found"));
+
+        if (!privateKey.equals(reservation.getPrivateKey())) {
+            throw new IllegalArgumentException("Invalid private key");
+        }
+
+        reservationRepository.delete(reservation);
+    }
 }
