@@ -4,6 +4,7 @@ import com.example.reservations.model.Participant;
 import com.example.reservations.model.Reservation;
 import com.example.reservations.model.ReservationAccess;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -12,7 +13,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -65,16 +65,31 @@ public class ReservationForm {
         reservation.setAccessType(accessType);
         reservation.setAccessCode(accessCode);
 
-        List<Participant> participantEntities = new ArrayList<>();
-        if (participantsText != null && !participantsText.isBlank()) {
-            participantEntities = Arrays.stream(participantsText.split(","))
-                    .map(String::trim)
-                    .filter(name -> !name.isEmpty())
-                    .map(Participant::new)
-                    .collect(Collectors.toList());
-        }
-        reservation.setParticipants(participantEntities);
+        reservation.setParticipants(parseParticipants());
         return reservation;
+    }
+
+    private List<Participant> parseParticipants() {
+        List<String> names = parseParticipantNames();
+        return names.stream()
+                .map(Participant::new)
+                .collect(Collectors.toList());
+    }
+
+    private List<String> parseParticipantNames() {
+        if (participantsText == null || participantsText.isBlank()) {
+            return List.of();
+        }
+
+        return Arrays.stream(participantsText.split(","))
+                .map(String::trim)
+                .filter(name -> !name.isEmpty())
+                .collect(Collectors.toList());
+    }
+
+    @AssertTrue(message = "At least one participant is required")
+    public boolean hasAtLeastOneParticipant() {
+        return !parseParticipantNames().isEmpty();
     }
 
     public String getTitle() {
