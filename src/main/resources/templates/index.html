@@ -13,6 +13,8 @@
         a.button:hover { background-color: #1b5fbd; }
         .actions a { margin-right: 0.5rem; }
         .empty { margin-top: 2rem; color: #555; font-style: italic; }
+        .alert { margin-top: 1rem; padding: 0.75rem; background: #fbeaea; color: #8a1f1f; border-radius: 4px; }
+        .success { margin-top: 1rem; padding: 0.75rem; background: #e8f5e9; color: #256029; border-radius: 4px; }
     </style>
 </head>
 <body>
@@ -20,18 +22,20 @@
 
 <a class="button" th:href="@{/reservations/new}">Create Reservation</a>
 
+<div th:if="${success}" class="success" th:text="${success}"></div>
+<div th:if="${error}" class="alert" th:text="${error}"></div>
+
 <div style="background: #fff; padding: 1.5rem; margin: 2rem 0; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
     <h2 style="margin-top: 0;">Access with Key</h2>
     <p>Enter your public or private key to view or manage a reservation:</p>
     <form action="/access" method="get" style="display: flex; gap: 0.5rem; align-items: center;">
-        <input type="text" name="key" placeholder="Enter access key" required 
+        <input type="text" name="key" placeholder="Enter access key" required
                style="flex: 1; padding: 0.5rem; border: 1px solid #ccd3dc; border-radius: 4px;">
-        <button type="submit" 
+        <button type="submit"
                 style="padding: 0.5rem 1rem; background-color: #27ae60; color: #fff; border: none; border-radius: 4px; cursor: pointer;">
             Access
         </button>
     </form>
-    <div th:if="${error}" style="margin-top: 1rem; padding: 0.75rem; background: #fbeaea; color: #8a1f1f; border-radius: 4px;" th:text="${error}"></div>
 </div>
 
 <h2>All Reservations</h2>

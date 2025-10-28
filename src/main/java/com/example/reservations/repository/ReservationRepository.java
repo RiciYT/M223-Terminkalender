@@ -15,6 +15,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     List<Reservation> findByAccessType(ReservationAccess accessType);
 
+    List<Reservation> findByRoomNumber(Integer roomNumber);
+
     Optional<Reservation> findByPublicKey(String publicKey);
 
     Optional<Reservation> findByPrivateKey(String privateKey);

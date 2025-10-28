@@ -15,9 +15,13 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class ReservationForm {
+
+    private static final Pattern PARTICIPANT_NAME_PATTERN =
+            Pattern.compile("^[A-Za-zÄÖÜäöüß]+(?:\\s+[A-Za-zÄÖÜäöüß]+)*$");
 
     @NotBlank(message = "Title is required")
     private String title;
@@ -35,6 +39,7 @@ public class ReservationForm {
     private String description;
 
     @NotNull(message = "Start time is required")
+    @Future(message = "Start time must be in the future")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime startTime;
 
@@ -56,10 +61,10 @@ public class ReservationForm {
 
     public Reservation toReservation() {
         Reservation reservation = new Reservation();
-        reservation.setTitle(title);
-        reservation.setLocation(location);
+        reservation.setTitle(title != null ? title.trim() : null);
+        reservation.setLocation(location != null ? location.trim() : null);
         reservation.setRoomNumber(roomNumber);
-        reservation.setDescription(description);
+        reservation.setDescription(description != null ? description.trim() : null);
         reservation.setStartTime(startTime);
         reservation.setEndTime(endTime);
         reservation.setAccessType(accessType);
