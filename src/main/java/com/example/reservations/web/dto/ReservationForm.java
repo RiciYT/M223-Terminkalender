@@ -68,7 +68,7 @@ public class ReservationForm {
         reservation.setStartTime(startTime);
         reservation.setEndTime(endTime);
         reservation.setAccessType(accessType);
-        reservation.setAccessCode(accessCode != null ? accessCode.trim() : null);
+        reservation.setAccessCode(accessCode);
 
         reservation.setParticipants(parseParticipants());
         return reservation;
@@ -95,28 +95,6 @@ public class ReservationForm {
     @AssertTrue(message = "At least one participant is required")
     public boolean hasAtLeastOneParticipant() {
         return !parseParticipantNames().isEmpty();
-    }
-
-    @AssertTrue(message = "Participant names may only contain letters and spaces")
-    public boolean isParticipantNamesValid() {
-        return parseParticipantNames().stream()
-                .allMatch(name -> PARTICIPANT_NAME_PATTERN.matcher(name).matches());
-    }
-
-    @AssertTrue(message = "Access code is required for private reservations")
-    public boolean isAccessCodeProvidedForPrivateReservations() {
-        if (accessType != ReservationAccess.PRIVATE) {
-            return true;
-        }
-        return accessCode != null && !accessCode.isBlank();
-    }
-
-    @AssertTrue(message = "End time must be after the start time")
-    public boolean isEndAfterStart() {
-        if (startTime == null || endTime == null) {
-            return true;
-        }
-        return endTime.isAfter(startTime);
     }
 
     public String getTitle() {
