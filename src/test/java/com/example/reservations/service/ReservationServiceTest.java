@@ -38,8 +38,9 @@ class ReservationServiceTest {
         testReservation.setLocation("Conference Room A");
         testReservation.setRoomNumber(101);
         testReservation.setDescription("This is a test meeting description with enough characters");
-        testReservation.setStartTime(LocalDateTime.now().plusDays(1));
-        testReservation.setEndTime(LocalDateTime.now().plusDays(1).plusHours(2));
+        LocalDateTime startTime = LocalDateTime.now().plusDays(1).withNano(0);
+        testReservation.setStartTime(startTime);
+        testReservation.setEndTime(startTime.plusHours(2));
         testReservation.setAccessType(ReservationAccess.PUBLIC);
 
         Participant participant = new Participant("John Doe");
@@ -79,8 +80,9 @@ class ReservationServiceTest {
         updatedData.setLocation("Conference Room B");
         updatedData.setRoomNumber(102);
         updatedData.setDescription("This is an updated meeting description with enough characters");
-        updatedData.setStartTime(LocalDateTime.now().plusDays(2));
-        updatedData.setEndTime(LocalDateTime.now().plusDays(2).plusHours(3));
+        LocalDateTime updatedStart = LocalDateTime.now().plusDays(2).withNano(0);
+        updatedData.setStartTime(updatedStart);
+        updatedData.setEndTime(updatedStart.plusHours(3));
         updatedData.setAccessType(ReservationAccess.PRIVATE);
         updatedData.setAccessCode("secret123");
 
@@ -211,8 +213,9 @@ class ReservationServiceTest {
         invalidReservation.setLocation("Conference Room A");
         invalidReservation.setRoomNumber(103);
         invalidReservation.setDescription("Invalid time range reservation");
-        invalidReservation.setStartTime(LocalDateTime.now().plusDays(1));
-        invalidReservation.setEndTime(LocalDateTime.now().plusDays(1).minusHours(1)); // Before start
+        LocalDateTime invalidStart = LocalDateTime.now().plusDays(1).withNano(0);
+        invalidReservation.setStartTime(invalidStart);
+        invalidReservation.setEndTime(invalidStart.minusHours(1)); // Before start
         invalidReservation.setAccessType(ReservationAccess.PUBLIC);
 
         Participant participant = new Participant("Charlie Davis");
@@ -231,8 +234,9 @@ class ReservationServiceTest {
         privateReservation.setLocation("Conference Room A");
         privateReservation.setRoomNumber(104);
         privateReservation.setDescription("This is a private meeting");
-        privateReservation.setStartTime(LocalDateTime.now().plusDays(3));
-        privateReservation.setEndTime(LocalDateTime.now().plusDays(3).plusHours(1));
+        LocalDateTime privateStart = LocalDateTime.now().plusDays(3).withNano(0);
+        privateReservation.setStartTime(privateStart);
+        privateReservation.setEndTime(privateStart.plusHours(1));
         privateReservation.setAccessType(ReservationAccess.PRIVATE);
         // Missing access code
 
@@ -248,8 +252,8 @@ class ReservationServiceTest {
     @Test
     void testKeyGeneration() {
         // Keys should be unique
-        Reservation reservation1 = createValidReservation(105, LocalDateTime.now().plusDays(5));
-        Reservation reservation2 = createValidReservation(105, LocalDateTime.now().plusDays(10));
+        Reservation reservation1 = createValidReservation(105, LocalDateTime.now().plusDays(5).withNano(0));
+        Reservation reservation2 = createValidReservation(105, LocalDateTime.now().plusDays(10).withNano(0));
 
         assertNotEquals(reservation1.getPublicKey(), reservation2.getPublicKey());
         assertNotEquals(reservation1.getPrivateKey(), reservation2.getPrivateKey());
@@ -270,5 +274,60 @@ class ReservationServiceTest {
         reservation.addParticipant(participant);
 
         return reservationService.createReservation(reservation);
+    }
+
+    @Test
+    void testReservationRequiresParticipants() {
+        Reservation reservation = new Reservation();
+        reservation.setTitle("Solo Meeting");
+        reservation.setLocation("Conference Room");
+        reservation.setRoomNumber(104);
+        reservation.setDescription("Meeting without participants should fail");
+        LocalDateTime startTime = LocalDateTime.now().plusDays(4).withNano(0);
+        reservation.setStartTime(startTime);
+        reservation.setEndTime(startTime.plusHours(1));
+        reservation.setAccessType(ReservationAccess.PUBLIC);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> reservationService.createReservation(reservation));
+        assertEquals("At least one participant is required", exception.getMessage());
+    }
+
+    @Test
+    void testStartTimeMustBeInTheFuture() {
+        Reservation reservation = new Reservation();
+        reservation.setTitle("Immediate Meeting");
+        reservation.setLocation("Conference Room");
+        reservation.setRoomNumber(103);
+        reservation.setDescription("Attempting to create a meeting starting immediately should fail");
+        LocalDateTime startTime = LocalDateTime.now().withNano(0);
+        reservation.setStartTime(startTime);
+        reservation.setEndTime(startTime.plusHours(1));
+        reservation.setAccessType(ReservationAccess.PUBLIC);
+        reservation.addParticipant(new Participant("Immediate User"));
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> reservationService.createReservation(reservation));
+        assertEquals("Start time must be in the future", exception.getMessage());
+    }
+
+    @Test
+    void testParticipantNamesMustBeLetters() {
+        Reservation reservation = new Reservation();
+        reservation.setTitle("Invalid Name Meeting");
+        reservation.setLocation("Conference Room");
+        reservation.setRoomNumber(105);
+        reservation.setDescription("Participant names must only contain letters and spaces");
+        LocalDateTime startTime = LocalDateTime.now().plusDays(6).withNano(0);
+        reservation.setStartTime(startTime);
+        reservation.setEndTime(startTime.plusHours(1));
+        reservation.setAccessType(ReservationAccess.PUBLIC);
+
+        Participant participant = new Participant("John Doe1");
+        reservation.addParticipant(participant);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> reservationService.createReservation(reservation));
+        assertEquals("Participant names may only contain letters and spaces", exception.getMessage());
     }
 }

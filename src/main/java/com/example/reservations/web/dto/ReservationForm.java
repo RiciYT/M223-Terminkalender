@@ -4,6 +4,7 @@ import com.example.reservations.model.Participant;
 import com.example.reservations.model.Reservation;
 import com.example.reservations.model.ReservationAccess;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -12,12 +13,15 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class ReservationForm {
+
+    private static final Pattern PARTICIPANT_NAME_PATTERN =
+            Pattern.compile("^[A-Za-zÄÖÜäöüß]+(?:\\s+[A-Za-zÄÖÜäöüß]+)*$");
 
     @NotBlank(message = "Title is required")
     private String title;
@@ -35,6 +39,7 @@ public class ReservationForm {
     private String description;
 
     @NotNull(message = "Start time is required")
+    @Future(message = "Start time must be in the future")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime startTime;
 
@@ -56,25 +61,62 @@ public class ReservationForm {
 
     public Reservation toReservation() {
         Reservation reservation = new Reservation();
-        reservation.setTitle(title);
-        reservation.setLocation(location);
+        reservation.setTitle(title != null ? title.trim() : null);
+        reservation.setLocation(location != null ? location.trim() : null);
         reservation.setRoomNumber(roomNumber);
-        reservation.setDescription(description);
+        reservation.setDescription(description != null ? description.trim() : null);
         reservation.setStartTime(startTime);
         reservation.setEndTime(endTime);
         reservation.setAccessType(accessType);
-        reservation.setAccessCode(accessCode);
+        reservation.setAccessCode(accessCode != null ? accessCode.trim() : null);
 
-        List<Participant> participantEntities = new ArrayList<>();
-        if (participantsText != null && !participantsText.isBlank()) {
-            participantEntities = Arrays.stream(participantsText.split(","))
-                    .map(String::trim)
-                    .filter(name -> !name.isEmpty())
-                    .map(Participant::new)
-                    .collect(Collectors.toList());
-        }
-        reservation.setParticipants(participantEntities);
+        reservation.setParticipants(parseParticipants());
         return reservation;
+    }
+
+    private List<Participant> parseParticipants() {
+        List<String> names = parseParticipantNames();
+        return names.stream()
+                .map(Participant::new)
+                .collect(Collectors.toList());
+    }
+
+    private List<String> parseParticipantNames() {
+        if (participantsText == null || participantsText.isBlank()) {
+            return List.of();
+        }
+
+        return Arrays.stream(participantsText.split(","))
+                .map(String::trim)
+                .filter(name -> !name.isEmpty())
+                .collect(Collectors.toList());
+    }
+
+    @AssertTrue(message = "At least one participant is required")
+    public boolean hasAtLeastOneParticipant() {
+        return !parseParticipantNames().isEmpty();
+    }
+
+    @AssertTrue(message = "Participant names may only contain letters and spaces")
+    public boolean isParticipantNamesValid() {
+        return parseParticipantNames().stream()
+                .allMatch(name -> PARTICIPANT_NAME_PATTERN.matcher(name).matches());
+    }
+
+    @AssertTrue(message = "Access code is required for private reservations")
+    public boolean isAccessCodeProvidedForPrivateReservations() {
+        if (accessType != ReservationAccess.PRIVATE) {
+            return true;
+        }
+        return accessCode != null && !accessCode.isBlank();
+    }
+
+    @AssertTrue(message = "End time must be after the start time")
+    public boolean isEndAfterStart() {
+        if (startTime == null || endTime == null) {
+            return true;
+        }
+        return endTime.isAfter(startTime);
     }
 
     public String getTitle() {

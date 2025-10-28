@@ -4,13 +4,12 @@ import com.example.reservations.model.Participant;
 import com.example.reservations.model.Reservation;
 import com.example.reservations.model.ReservationAccess;
 import com.example.reservations.repository.ReservationRepository;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +19,8 @@ public class ReservationService {
 
     private final ReservationRepository reservationRepository;
     private static final SecureRandom secureRandom = new SecureRandom();
+    private static final Pattern PARTICIPANT_NAME_PATTERN =
+            Pattern.compile("^[A-Za-zÄÖÜäöüß]+(?:\\s+[A-Za-zÄÖÜäöüß]+)*$");
 
     public ReservationService(ReservationRepository reservationRepository) {
         this.reservationRepository = reservationRepository;
@@ -38,7 +39,7 @@ public class ReservationService {
     }
 
     @Transactional
-    public Reservation createReservation(@Valid @NotNull Reservation reservation) {
+    public Reservation createReservation(Reservation reservation) {
         validateReservation(reservation);
         generateKeys(reservation);
         return reservationRepository.save(reservation);
@@ -62,26 +63,31 @@ public class ReservationService {
     private void validateReservation(Reservation reservation, Long excludeId) {
         LocalDateTime start = reservation.getStartTime();
         LocalDateTime end = reservation.getEndTime();
+        LocalDateTime now = LocalDateTime.now();
 
-        if (start == null || end == null || !end.isAfter(start)) {
+        if (start == null || end == null) {
+            throw new IllegalArgumentException("Start and end time are required");
+        }
+
+        if (!end.isAfter(start)) {
             throw new IllegalArgumentException("End time must be after the start time");
         }
 
-        if (start.isBefore(LocalDateTime.now())) {
+        if (!start.isAfter(now)) {
             throw new IllegalArgumentException("Start time must be in the future");
+        }
+
+        if (!end.isAfter(now)) {
+            throw new IllegalArgumentException("End time must be in the future");
         }
 
         Integer roomNumber = reservation.getRoomNumber();
         if (roomNumber != null) {
-            // Check for conflicts, but exclude the current reservation if updating
-            boolean conflict = reservationRepository.findAll().stream()
-                    .filter(r -> !r.getId().equals(excludeId)) // Exclude current reservation
-                    .filter(r -> r.getRoomNumber().equals(roomNumber))
-                    .anyMatch(r -> {
-                        // Check if time ranges overlap
-                        return start.isBefore(r.getEndTime()) && end.isAfter(r.getStartTime());
-                    });
-            
+            List<Reservation> sameRoomReservations = reservationRepository.findByRoomNumber(roomNumber);
+            boolean conflict = sameRoomReservations.stream()
+                    .filter(existing -> excludeId == null || !excludeId.equals(existing.getId()))
+                    .anyMatch(existing -> start.isBefore(existing.getEndTime()) && end.isAfter(existing.getStartTime()));
+
             if (conflict) {
                 throw new IllegalStateException("The selected room and time slot conflicts with an existing reservation");
             }
@@ -94,7 +100,19 @@ public class ReservationService {
             }
         }
 
+        if (reservation.getParticipants() == null || reservation.getParticipants().isEmpty()) {
+            throw new IllegalArgumentException("At least one participant is required");
+        }
+
         for (Participant participant : reservation.getParticipants()) {
+            String rawName = participant.getName() == null ? "" : participant.getName().trim();
+            if (rawName.isEmpty()) {
+                throw new IllegalArgumentException("Participant names may only contain letters and spaces");
+            }
+            if (!PARTICIPANT_NAME_PATTERN.matcher(rawName).matches()) {
+                throw new IllegalArgumentException("Participant names may only contain letters and spaces");
+            }
+            participant.setName(rawName);
             participant.setReservation(reservation);
         }
     }
