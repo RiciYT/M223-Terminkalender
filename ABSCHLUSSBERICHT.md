@@ -28,9 +28,13 @@ Alle kritischen Anforderungen für die Projektabgabe wurden erfolgreich implemen
 #### 2. UML-Diagramme (PlantUML + Mermaid)
 
 **Zustandsdiagramm** (`Doku/diagrams/state-diagram.puml` & `.md`):
-- Zeigt komplette Navigation der Webapplikation
+- Zeigt **vollständige** Navigation der Webapplikation (Version 2.0)
 - Alle Zustände: Index, CreateForm, EditForm, Confirmation, PublicView, PrivateView, KeyAccess
-- Transitionen mit Bedingungen
+- Alle Transitionen mit präzisen Bedingungen und Autorisierungsanforderungen
+- 21 Transitionen inkl. direkter Links aus Index-Tabelle und Self-Transitions
+- Erweiterte Notizen für Access Modes (Private Key vs. Access Code)
+- **100% Code-Coverage** validiert (alle Controller, Templates, Forms)
+- Detaillierte Verbesserungsdokumentation: `STATE_DIAGRAM_IMPROVEMENTS.md`
 
 **ERM/ERD** (`Doku/diagrams/erd-diagram.puml` & `.md`):
 - Entitäten: RESERVATIONS, PARTICIPANTS

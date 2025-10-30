@@ -5,36 +5,55 @@ title Zustandsdiagramm - M223 Terminkalender Navigation
 
 Index --> CreateForm : Click "Create Reservation"
 Index --> KeyAccess : Enter Key
+Index --> Confirmation : Click "Confirmation" link
+Index --> PublicView : Click "Public view" link
+Index --> PrivateView : Click "Private access" link
 
 CreateForm --> Confirmation : Submit valid form
 CreateForm --> CreateForm : Validation error
 
 Confirmation --> Index : Back to overview
-Confirmation --> PublicView : Open public page
-Confirmation --> PrivateView : Open private page
+Confirmation --> PublicView : Open public page (PUBLIC)
+Confirmation --> PrivateView : Open private page (PRIVATE)
 
 KeyAccess --> PublicView : Valid public key
-KeyAccess --> PrivateView : Valid private key
+KeyAccess --> PrivateView : Valid private key (full access)
 KeyAccess --> Index : Invalid key
 
 PublicView --> Index : Back
+
 PrivateView --> Index : Back
-PrivateView --> EditForm : Edit (with private key)
-PrivateView --> Index : Delete (with confirmation)
+PrivateView --> PrivateView : Enter access code (view only)
+PrivateView --> EditForm : Edit (requires private key)
+PrivateView --> Index : Delete (requires private key)
 
 EditForm --> Confirmation : Update successful
 EditForm --> EditForm : Validation error
+EditForm --> Index : Back (cancel)
 
 note right of KeyAccess
   Decision: 
   - Public Key → Read-only view
-  - Private Key → Management view
+  - Private Key → Full management access
 end note
 
 note right of PrivateView
-  Only accessible with:
-  - Private key (full management)
-  - OR access code (view only)
+  Two access modes:
+  1. Private Key → Full management
+     (Edit/Delete available)
+  2. Access Code → View only
+     (Edit/Delete not available)
+  
+  Initial state prompts for
+  access code if not authorized
+end note
+
+note right of Index
+  Shows all reservations
+  with links to:
+  - Confirmation pages
+  - Public view (PUBLIC type)
+  - Private access (PRIVATE type)
 end note
 
 @enduml
