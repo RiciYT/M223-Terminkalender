@@ -30,7 +30,7 @@ Reservationssystem für Sitzungs- und Veranstaltungsräume (Zimmer 101-105) mit 
 ## 🚀 Quick Start
 
 ### Voraussetzungen
-- Java 17+
+- Java 25+
 - Maven 3.6+
 
 ### Anwendung starten
@@ -56,8 +56,8 @@ java -jar target/reservation-0.0.1-SNAPSHOT.jar
 
 ## 🏗️ Technologie-Stack
 
-- **Framework**: Spring Boot 3.4.2
-- **Java Version**: 17
+- **Framework**: Spring Boot 3.5.7
+- **Java Version**: 25
 - **Build Tool**: Maven
 - **Datenbank**: H2 (In-Memory)
 - **Template Engine**: Thymeleaf
