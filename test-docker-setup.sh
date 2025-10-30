@@ -2,12 +2,20 @@
 
 # Test script for Docker Compose MySQL Setup
 # This script demonstrates the complete MySQL Docker setup
+#
+# SECURITY NOTE: This script is intended for development/testing purposes.
+# For production use, consider using:
+# - MySQL configuration files instead of command-line passwords
+# - Docker secrets for credential management
+# - Vault or other secrets management systems
 
 set -e
 
 # Load environment variables from .env if it exists, otherwise use defaults
 if [ -f .env ]; then
-    source <(grep -v '^#' .env | sed 's/^/export /')
+    set -a
+    source .env
+    set +a
 fi
 
 # Set defaults if not already set
@@ -61,6 +69,8 @@ attempt=0
 while [ $attempt -lt $max_attempts ]; do
     if docker compose ps | grep -q "healthy"; then
         echo "✅ MySQL is healthy"
+        # Give MySQL a moment to fully initialize after health check passes
+        sleep 2
         break
     fi
     attempt=$((attempt + 1))
