@@ -54,12 +54,60 @@ Die Anwendung läuft auf: http://localhost:8080
 java -jar target/reservation-0.0.1-SNAPSHOT.jar
 ```
 
+### 🐳 Docker Setup (MySQL Database)
+
+Das Projekt enthält eine Docker Compose Konfiguration für eine MySQL Datenbank.
+
+#### Voraussetzungen
+- Docker Desktop oder Docker Engine installiert
+- Docker Compose installiert
+
+#### MySQL Datenbank starten
+
+1. **Umgebungsvariablen konfigurieren** (optional):
+   ```bash
+   cp .env.example .env
+   # Bearbeite .env mit deinen gewünschten Werten
+   ```
+
+2. **Docker Container starten**:
+   ```bash
+   docker compose up -d
+   ```
+
+3. **Status prüfen**:
+   ```bash
+   docker compose ps
+   docker compose logs mysql
+   ```
+
+4. **Anwendung mit MySQL starten**:
+   ```bash
+   ./mvnw spring-boot:run
+   ```
+   Die Anwendung nutzt die MySQL-Konfiguration aus `application.properties`.
+
+#### Nützliche Docker Befehle
+
+- **Container stoppen**: `docker compose down`
+- **Container stoppen und Daten löschen**: `docker compose down -v`
+- **Logs anzeigen**: `docker compose logs -f mysql`
+- **MySQL Console öffnen**: `docker compose exec mysql mysql -u reservation_user -p reservations`
+
+#### Standard-Konfiguration
+
+- **Host**: localhost
+- **Port**: 3306
+- **Database**: reservations
+- **User**: reservation_user
+- **Password**: change-me (änderbar in .env)
+
 ## 🏗️ Technologie-Stack
 
 - **Framework**: Spring Boot 3.5.7
 - **Java Version**: 25
 - **Build Tool**: Maven
-- **Datenbank**: H2 (In-Memory)
+- **Datenbank**: MySQL 9.5 (via Docker Compose) / H2 (In-Memory für Tests)
 - **Template Engine**: Thymeleaf
 - **Persistenz**: Spring Data JPA
 - **Validierung**: Jakarta Bean Validation
