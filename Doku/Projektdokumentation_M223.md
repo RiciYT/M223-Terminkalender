@@ -104,7 +104,7 @@ Beide Schlüssel werden mit **SecureRandom** kryptographisch sicher generiert.
 
 ## 3. UML-Zustandsdiagramm
 
-Das Zustandsdiagramm zeigt die Navigation durch die Webapplikation.
+Das Zustandsdiagramm zeigt die vollständige Navigation durch die Webapplikation mit allen möglichen Zustandsübergängen.
 
 ### 3.1 PlantUML-Diagramm
 
@@ -116,36 +116,55 @@ title Zustandsdiagramm - M223 Terminkalender Navigation
 
 Index --> CreateForm : Click "Create Reservation"
 Index --> KeyAccess : Enter Key
+Index --> Confirmation : Click "Confirmation" link
+Index --> PublicView : Click "Public view" link
+Index --> PrivateView : Click "Private access" link
 
 CreateForm --> Confirmation : Submit valid form
 CreateForm --> CreateForm : Validation error
 
 Confirmation --> Index : Back to overview
-Confirmation --> PublicView : Open public page
-Confirmation --> PrivateView : Open private page
+Confirmation --> PublicView : Open public page (PUBLIC)
+Confirmation --> PrivateView : Open private page (PRIVATE)
 
 KeyAccess --> PublicView : Valid public key
-KeyAccess --> PrivateView : Valid private key
+KeyAccess --> PrivateView : Valid private key (full access)
 KeyAccess --> Index : Invalid key
 
 PublicView --> Index : Back
+
 PrivateView --> Index : Back
-PrivateView --> EditForm : Edit (with private key)
-PrivateView --> Index : Delete (with confirmation)
+PrivateView --> PrivateView : Enter access code (view only)
+PrivateView --> EditForm : Edit (requires private key)
+PrivateView --> Index : Delete (requires private key)
 
 EditForm --> Confirmation : Update successful
 EditForm --> EditForm : Validation error
+EditForm --> Index : Back (cancel)
 
 note right of KeyAccess
   Decision: 
   - Public Key → Read-only view
-  - Private Key → Management view
+  - Private Key → Full management access
 end note
 
 note right of PrivateView
-  Only accessible with:
-  - Private key (full management)
-  - OR access code (view only)
+  Two access modes:
+  1. Private Key → Full management
+     (Edit/Delete available)
+  2. Access Code → View only
+     (Edit/Delete not available)
+  
+  Initial state prompts for
+  access code if not authorized
+end note
+
+note right of Index
+  Shows all reservations
+  with links to:
+  - Confirmation pages
+  - Public view (PUBLIC type)
+  - Private access (PRIVATE type)
 end note
 
 @enduml
@@ -153,13 +172,27 @@ end note
 
 ### 3.2 Zustandsbeschreibungen
 
-- **Index**: Startseite mit Übersicht aller Reservierungen und Suchfeld für Keys
-- **KeyAccess**: Zugriffskontrolle basierend auf Public/Private Key
-- **CreateForm**: Formular zum Erstellen einer neuen Reservation
-- **EditForm**: Formular zum Bearbeiten einer existierenden Reservation (nur mit Private Key)
-- **Confirmation**: Bestätigungsseite nach Erstellen/Aktualisieren mit Anzeige beider Keys
-- **PublicView**: Öffentliche Ansicht einer Reservation (Read-Only)
-- **PrivateView**: Private Ansicht mit Verwaltungsfunktionen (Edit/Delete)
+- **Index**: Startseite mit Übersicht aller Reservierungen. Bietet direkte Links zu Confirmation, Public View und Private Access für jede Reservation sowie ein Suchfeld für Keys und einen Button zum Erstellen neuer Reservierungen.
+- **KeyAccess**: Zugriffskontrolle basierend auf Public/Private Key. Leitet automatisch zur entsprechenden View weiter oder zurück zum Index bei ungültigem Key.
+- **CreateForm**: Formular zum Erstellen einer neuen Reservation mit vollständiger Validierung.
+- **EditForm**: Formular zum Bearbeiten einer existierenden Reservation (nur mit Private Key). Kann abgebrochen werden (zurück zu Index).
+- **Confirmation**: Bestätigungsseite nach Erstellen/Aktualisieren mit Anzeige beider Keys (Public und Private) sowie Links zur entsprechenden View.
+- **PublicView**: Öffentliche Ansicht einer PUBLIC Reservation (Read-Only).
+- **PrivateView**: Private Ansicht mit zwei Zugriffsmodi:
+  - **Mit Private Key**: Vollzugriff mit Edit/Delete-Funktionen
+  - **Mit Access Code**: Nur Lesezugriff ohne Verwaltungsfunktionen
+
+### 3.3 Verbesserungen
+
+Das Diagramm wurde umfassend überarbeitet (Version 2.0):
+- ✅ +5 neue Transitionen für vollständige Navigation
+- ✅ Alle direkten Links aus der Index-Tabelle hinzugefügt
+- ✅ Self-Transition in PrivateView für Access Code-Eingabe
+- ✅ Präzisere Beschriftungen mit Autorisierungsanforderungen
+- ✅ Erweiterte Notizen mit strukturierten Beschreibungen
+- ✅ 100% Code-Coverage (alle Controller, Templates und Forms abgedeckt)
+
+Detaillierte Dokumentation der Verbesserungen: `diagrams/STATE_DIAGRAM_IMPROVEMENTS.md`
 
 ---
 
