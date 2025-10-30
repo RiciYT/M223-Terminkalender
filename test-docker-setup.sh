@@ -5,6 +5,17 @@
 
 set -e
 
+# Load environment variables from .env if it exists, otherwise use defaults
+if [ -f .env ]; then
+    source <(grep -v '^#' .env | sed 's/^/export /')
+fi
+
+# Set defaults if not already set
+MYSQL_PASSWORD=${MYSQL_PASSWORD:-change-me}
+MYSQL_USER=${MYSQL_USER:-reservation_user}
+MYSQL_DATABASE=${MYSQL_DATABASE:-reservations}
+MYSQL_PORT=${MYSQL_PORT:-3306}
+
 echo "🐳 Docker Compose MySQL Setup Test"
 echo "===================================="
 echo ""
@@ -69,7 +80,7 @@ echo ""
 
 # Test MySQL connection
 echo "7. Testing MySQL connection..."
-if docker compose exec mysql mysqladmin -u reservation_user -pchange-me ping 2>&1 | grep -q "mysqld is alive"; then
+if docker compose exec mysql mysqladmin -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" ping 2>&1 | grep -q "mysqld is alive"; then
     echo "✅ MySQL connection successful"
 else
     echo "❌ MySQL connection failed"
@@ -79,17 +90,17 @@ echo ""
 
 # Show databases
 echo "8. Available databases:"
-docker compose exec -T mysql mysql -u reservation_user -pchange-me -e "SHOW DATABASES;" 2>/dev/null | grep reservations && echo "✅ Database 'reservations' exists"
+docker compose exec -T mysql mysql -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" -e "SHOW DATABASES;" 2>/dev/null | grep "$MYSQL_DATABASE" && echo "✅ Database '$MYSQL_DATABASE' exists"
 echo ""
 
 # Show setup information
 echo "📋 Setup Information:"
 echo "===================="
-echo "Database: reservations"
-echo "User: reservation_user"
-echo "Password: change-me (change in .env file)"
+echo "Database: $MYSQL_DATABASE"
+echo "User: $MYSQL_USER"
+echo "Password: ****** (configured via environment)"
 echo "Host: localhost"
-echo "Port: 3306"
+echo "Port: $MYSQL_PORT"
 echo ""
 
 echo "✨ All tests passed! MySQL Docker setup is working correctly."
