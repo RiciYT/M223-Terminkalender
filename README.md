@@ -233,7 +233,23 @@ Tests run: 14, Failures: 0, Errors: 0, Skipped: 0
 
 ## 👥 Team
 
-Entwickelt für das Modul 223 - Multiuser-Applikationen objektorientiert realisieren
+**Projekt:** M223 Terminkalender - Reservationssystem  
+**Modul:** 223 - Multiuser-Applikationen objektorientiert realisieren  
+**Institution:** Berufsbildungszentrum  
+**Entwicklungszeitraum:** Oktober - November 2025
+
+### Projektteam
+
+Dieses Projekt wurde im Rahmen des Moduls M223 entwickelt.
+
+### Rollen und Verantwortlichkeiten
+
+- **Backend-Entwicklung**: Spring Boot, JPA, REST-Endpunkte
+- **Frontend-Entwicklung**: Thymeleaf Templates, HTML/CSS
+- **Datenbank-Design**: MySQL Schema, Entity-Relationships
+- **Testing**: JUnit Tests, Integration Tests
+- **Dokumentation**: UML-Diagramme, Projektdokumentation
+- **DevOps**: Docker Setup, Build-Konfiguration
 
 ## 📄 Lizenz
 
@@ -255,6 +271,6 @@ Alle Anforderungen des Projektauftrags wurden erfolgreich implementiert und gete
 ---
 
 **Version**: 1.0  
-**Datum**: Oktober 2024  
+**Datum**: November 2025  
 **Modul**: M223 – Multiuser-Applikationen objektorientiert realisieren
 
