@@ -11,7 +11,7 @@ stateDiagram-v2
         Übersicht: Reservationsliste
         Übersicht: - Alle Reservationen anzeigen
         Übersicht: - Schlüsseleingabe-Formular
-        Übersicht: - Link "Create Reservation"
+        Übersicht: - Link "Reservation erstellen"
     }
     
     state ReservationsFormular {
@@ -68,7 +68,7 @@ stateDiagram-v2
         Validation --> [*] : Erfolgreich
     }
     
-    Startseite --> ReservationsFormular : "Create Reservation" klicken
+    Startseite --> ReservationsFormular : "Reservation erstellen" klicken
     Startseite --> SchlüsselZugriff : Key eingeben
     
     ReservationsFormular --> Bestätigung : Reservation erfolgreich erstellt
