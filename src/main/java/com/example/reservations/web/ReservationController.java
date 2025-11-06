@@ -66,6 +66,7 @@ public class ReservationController {
     @GetMapping("/reservations/new")
     public String newReservation(Model model) {
         model.addAttribute("reservationForm", new ReservationForm());
+        model.addAttribute("editMode", false);
         return "reservation-form";
     }
 
