@@ -34,7 +34,7 @@ class ReservationFormTest {
 
         assertTrue(
                 violations.stream()
-                        .anyMatch(violation -> violation.getMessage().equals("At least one participant is required")),
+                        .anyMatch(violation -> violation.getMessage().equals("Mindestens ein Teilnehmer ist erforderlich")),
                 "Validation should fail when no participant names are provided"
         );
     }
