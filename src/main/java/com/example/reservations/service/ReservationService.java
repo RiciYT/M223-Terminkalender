@@ -66,19 +66,19 @@ public class ReservationService {
         LocalDateTime now = LocalDateTime.now();
 
         if (start == null || end == null) {
-            throw new IllegalArgumentException("Start and end time are required");
+            throw new IllegalArgumentException("Start- und Endzeit sind erforderlich");
         }
 
         if (!end.isAfter(start)) {
-            throw new IllegalArgumentException("End time must be after the start time");
+            throw new IllegalArgumentException("Endzeit muss nach der Startzeit liegen");
         }
 
         if (!start.isAfter(now)) {
-            throw new IllegalArgumentException("Start time must be in the future");
+            throw new IllegalArgumentException("Startzeit muss in der Zukunft liegen");
         }
 
         if (!end.isAfter(now)) {
-            throw new IllegalArgumentException("End time must be in the future");
+            throw new IllegalArgumentException("Endzeit muss in der Zukunft liegen");
         }
 
         Integer roomNumber = reservation.getRoomNumber();
@@ -89,28 +89,28 @@ public class ReservationService {
                     .anyMatch(existing -> start.isBefore(existing.getEndTime()) && end.isAfter(existing.getStartTime()));
 
             if (conflict) {
-                throw new IllegalStateException("The selected room and time slot conflicts with an existing reservation");
+                throw new IllegalStateException("Der ausgewählte Raum und Zeitslot kollidiert mit einer bestehenden Reservierung");
             }
         }
 
         if (reservation.getAccessType() == ReservationAccess.PRIVATE) {
             String accessCode = reservation.getAccessCode();
             if (accessCode == null || accessCode.isBlank()) {
-                throw new IllegalArgumentException("Private reservations require an access code");
+                throw new IllegalArgumentException("Private Reservierungen erfordern einen Zugangscode");
             }
         }
 
         if (reservation.getParticipants() == null || reservation.getParticipants().isEmpty()) {
-            throw new IllegalArgumentException("At least one participant is required");
+            throw new IllegalArgumentException("Mindestens ein Teilnehmer ist erforderlich");
         }
 
         for (Participant participant : reservation.getParticipants()) {
             String rawName = participant.getName() == null ? "" : participant.getName().trim();
             if (rawName.isEmpty()) {
-                throw new IllegalArgumentException("Participant names may only contain letters and spaces");
+                throw new IllegalArgumentException("Teilnehmernamen dürfen nur Buchstaben und Leerzeichen enthalten");
             }
             if (!PARTICIPANT_NAME_PATTERN.matcher(rawName).matches()) {
-                throw new IllegalArgumentException("Participant names may only contain letters and spaces");
+                throw new IllegalArgumentException("Teilnehmernamen dürfen nur Buchstaben und Leerzeichen enthalten");
             }
             participant.setName(rawName);
             participant.setReservation(reservation);
@@ -128,11 +128,11 @@ public class ReservationService {
     @Transactional
     public Reservation updateReservation(Long id, String privateKey, Reservation updatedData) {
         Reservation existing = reservationRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Reservation not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Reservierung nicht gefunden"));
 
         // Autorisierung
         if (!privateKey.equals(existing.getPrivateKey())) {
-            throw new IllegalArgumentException("Invalid private key");
+            throw new IllegalArgumentException("Ungültiger privater Schlüssel");
         }
 
         // Daten aktualisieren
@@ -157,10 +157,10 @@ public class ReservationService {
     @Transactional
     public void deleteReservation(Long id, String privateKey) {
         Reservation reservation = reservationRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Reservation not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Reservierung nicht gefunden"));
 
         if (!privateKey.equals(reservation.getPrivateKey())) {
-            throw new IllegalArgumentException("Invalid private key");
+            throw new IllegalArgumentException("Ungültiger privater Schlüssel");
         }
 
         reservationRepository.delete(reservation);

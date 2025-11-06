@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Reservation Confirmation</title>
+    <title>Reservierungsbestätigung</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 2rem; background-color: #f0f3f8; }
         .card { background: #fff; padding: 2rem; border-radius: 6px; max-width: 640px; margin: auto; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
@@ -16,30 +16,30 @@
 </head>
 <body>
 <div class="card">
-    <h1>Reservation Confirmed</h1>
+    <h1>Reservierung bestätigt</h1>
     <p class="meta"><strong th:text="${reservation.title}">Event title</strong></p>
-    <p class="meta">Location: <span th:text="${reservation.location}">Room</span></p>
-    <p class="meta">Room Number: <span th:text="${reservation.roomNumber}">101</span></p>
-    <p class="meta">Start: <span th:text="${#temporals.format(reservation.startTime, 'yyyy-MM-dd HH:mm')}">2024-01-01 09:00</span></p>
-    <p class="meta">End: <span th:text="${#temporals.format(reservation.endTime, 'yyyy-MM-dd HH:mm')}">2024-01-01 10:00</span></p>
-    <p class="meta">Access: <span th:text="${reservation.accessType}">PUBLIC</span></p>
+    <p class="meta">Ort: <span th:text="${reservation.location}">Room</span></p>
+    <p class="meta">Raumnummer: <span th:text="${reservation.roomNumber}">101</span></p>
+    <p class="meta">Beginn: <span th:text="${#temporals.format(reservation.startTime, 'yyyy-MM-dd HH:mm')}">2024-01-01 09:00</span></p>
+    <p class="meta">Ende: <span th:text="${#temporals.format(reservation.endTime, 'yyyy-MM-dd HH:mm')}">2024-01-01 10:00</span></p>
+    <p class="meta">Zugriff: <span th:text="${reservation.accessType}">PUBLIC</span></p>
 
     <section style="background: #e8f4fd; padding: 1rem; border-radius: 4px; margin: 1.5rem 0;">
-        <h2>Access Keys</h2>
-        <p><strong>Public Key</strong> (share with participants to view the reservation):</p>
+        <h2>Zugriffsschlüssel</h2>
+        <p><strong>Öffentlicher Schlüssel</strong> (mit Teilnehmern teilen, um die Reservierung anzuzeigen):</p>
         <p class="code" th:text="${reservation.publicKey}">PUBLIC_KEY</p>
         
-        <p style="margin-top: 1rem;"><strong>Private Key</strong> (keep secure - allows editing and deletion):</p>
+        <p style="margin-top: 1rem;"><strong>Privater Schlüssel</strong> (sicher aufbewahren - ermöglicht Bearbeitung und Löschung):</p>
         <p class="code" th:text="${reservation.privateKey}">PRIVATE_KEY</p>
     </section>
 
     <div th:if="${reservation.accessType.name() == 'PRIVATE'}">
-        <p>This reservation is private. Additional access code required:</p>
+        <p>Diese Reservierung ist privat. Zusätzlicher Zugangscode erforderlich:</p>
         <p class="code" th:text="${reservation.accessCode}">SECRET</p>
     </div>
 
     <section>
-        <h2>Participants</h2>
+        <h2>Teilnehmer</h2>
         <ul>
             <li th:each="participant : ${reservation.participants}"
                 th:text="${participant.name}">Jane Doe</li>
@@ -47,11 +47,11 @@
     </section>
 
     <div class="actions">
-        <a th:href="@{/}">Back to overview</a>
+        <a th:href="@{/}">Zurück zur Übersicht</a>
         <a th:if="${reservation.accessType.name() == 'PUBLIC'}"
-           th:href="@{'/reservations/' + ${reservation.id} + '/public'}">Open public page</a>
+           th:href="@{'/reservations/' + ${reservation.id} + '/public'}">Öffentliche Seite öffnen</a>
         <a th:if="${reservation.accessType.name() == 'PRIVATE'}"
-           th:href="@{'/reservations/' + ${reservation.id} + '/private'}">Open private page</a>
+           th:href="@{'/reservations/' + ${reservation.id} + '/private'}">Private Seite öffnen</a>
     </div>
 </div>
 

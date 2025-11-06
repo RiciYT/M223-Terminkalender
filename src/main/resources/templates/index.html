@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Reservation Calendar</title>
+    <title>Reservierungskalender</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 2rem; background-color: #f5f6f8; }
         h1 { color: #2d3e50; }
@@ -18,42 +18,42 @@
     </style>
 </head>
 <body>
-<h1>Reservation Calendar</h1>
+<h1>Reservierungskalender</h1>
 
-<a class="button" th:href="@{/reservations/new}">Create Reservation</a>
+<a class="button" th:href="@{/reservations/new}">Reservierung erstellen</a>
 
 <div th:if="${success}" class="success" th:text="${success}"></div>
 <div th:if="${error}" class="alert" th:text="${error}"></div>
 
 <div style="background: #fff; padding: 1.5rem; margin: 2rem 0; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-    <h2 style="margin-top: 0;">Access with Key</h2>
-    <p>Enter your public or private key to view or manage a reservation:</p>
+    <h2 style="margin-top: 0;">Zugriff mit Schlüssel</h2>
+    <p>Geben Sie Ihren öffentlichen oder privaten Schlüssel ein, um eine Reservierung anzuzeigen oder zu verwalten:</p>
     <form action="/access" method="get" style="display: flex; gap: 0.5rem; align-items: center;">
-        <input type="text" name="key" placeholder="Enter access key" required
+        <input type="text" name="key" placeholder="Zugriffsschlüssel eingeben" required
                style="flex: 1; padding: 0.5rem; border: 1px solid #ccd3dc; border-radius: 4px;">
         <button type="submit"
                 style="padding: 0.5rem 1rem; background-color: #27ae60; color: #fff; border: none; border-radius: 4px; cursor: pointer;">
-            Access
+            Zugreifen
         </button>
     </form>
 </div>
 
-<h2>All Reservations</h2>
+<h2>Alle Reservierungen</h2>
 
 <div th:if="${#lists.isEmpty(reservations)}" class="empty">
-    There are no reservations yet. Use the button above to add the first one.
+    Es gibt noch keine Reservierungen. Verwenden Sie die Schaltfläche oben, um die erste hinzuzufügen.
 </div>
 
 <table th:if="${!#lists.isEmpty(reservations)}">
     <thead>
     <tr>
-        <th>Title</th>
-        <th>Location</th>
-        <th>Room</th>
-        <th>Start</th>
-        <th>End</th>
-        <th>Access</th>
-        <th>Actions</th>
+        <th>Titel</th>
+        <th>Ort</th>
+        <th>Raum</th>
+        <th>Beginn</th>
+        <th>Ende</th>
+        <th>Zugriff</th>
+        <th>Aktionen</th>
     </tr>
     </thead>
     <tbody>
@@ -65,11 +65,11 @@
         <td th:text="${#temporals.format(reservation.endTime, 'yyyy-MM-dd HH:mm')}">2024-01-01 10:00</td>
         <td th:text="${reservation.accessType}">PUBLIC</td>
         <td class="actions">
-            <a th:href="@{'/reservations/' + ${reservation.id} + '/confirm'}">Confirmation</a>
+            <a th:href="@{'/reservations/' + ${reservation.id} + '/confirm'}">Bestätigung</a>
             <a th:if="${reservation.accessType.name() == 'PUBLIC'}"
-               th:href="@{'/reservations/' + ${reservation.id} + '/public'}">Public view</a>
+               th:href="@{'/reservations/' + ${reservation.id} + '/public'}">Öffentliche Ansicht</a>
             <a th:if="${reservation.accessType.name() == 'PRIVATE'}"
-               th:href="@{'/reservations/' + ${reservation.id} + '/private'}">Private access</a>
+               th:href="@{'/reservations/' + ${reservation.id} + '/private'}">Privater Zugriff</a>
         </td>
     </tr>
     </tbody>

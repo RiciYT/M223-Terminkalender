@@ -41,7 +41,7 @@ public class ReservationController {
     @GetMapping("/access")
     public String accessByKey(@RequestParam(value = "key", required = false) String key, Model model) {
         if (key == null || key.isBlank()) {
-            model.addAttribute("error", "Please enter a valid access key");
+            model.addAttribute("error", "Bitte geben Sie einen gültigen Zugriffsschlüssel ein");
             model.addAttribute("reservations", reservationService.findAll());
             return "index";
         }
@@ -58,7 +58,7 @@ public class ReservationController {
             return "redirect:/reservations/" + reservation.get().getId() + "/private?authorized=true&key=" + key;
         }
 
-        model.addAttribute("error", "Invalid access key");
+        model.addAttribute("error", "Ungültiger Zugriffsschlüssel");
         model.addAttribute("reservations", reservationService.findAll());
         return "index";
     }
@@ -95,7 +95,7 @@ public class ReservationController {
     @GetMapping("/reservations/{id}/confirm")
     public String confirmation(@PathVariable Long id, Model model) {
         Reservation reservation = reservationService.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Reservation not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Reservierung nicht gefunden"));
         model.addAttribute("reservation", reservation);
         return "reservation-confirmation";
     }
@@ -103,9 +103,9 @@ public class ReservationController {
     @GetMapping("/reservations/{id}/public")
     public String publicView(@PathVariable Long id, Model model) {
         Reservation reservation = reservationService.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Reservation not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Reservierung nicht gefunden"));
         if (reservation.getAccessType() != ReservationAccess.PUBLIC) {
-            model.addAttribute("error", "This reservation is private.");
+            model.addAttribute("error", "Diese Reservierung ist privat.");
             return "reservation-public";
         }
         model.addAttribute("reservation", reservation);
@@ -118,11 +118,11 @@ public class ReservationController {
                                    Model model,
                                    RedirectAttributes redirectAttributes) {
         Reservation reservation = reservationService.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Reservation not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Reservierung nicht gefunden"));
 
         // Autorisierung prüfen
         if (!key.equals(reservation.getPrivateKey())) {
-            redirectAttributes.addFlashAttribute("error", "Invalid private key");
+            redirectAttributes.addFlashAttribute("error", "Ungültiger privater Schlüssel");
             return "redirect:/";
         }
 
@@ -166,7 +166,7 @@ public class ReservationController {
                                      RedirectAttributes redirectAttributes) {
         try {
             reservationService.deleteReservation(id, key);
-            redirectAttributes.addFlashAttribute("success", "Reservation successfully deleted");
+            redirectAttributes.addFlashAttribute("success", "Reservierung erfolgreich gelöscht");
             return "redirect:/";
         } catch (IllegalArgumentException ex) {
             redirectAttributes.addFlashAttribute("error", ex.getMessage());
@@ -181,7 +181,7 @@ public class ReservationController {
             @RequestParam(value = "key", required = false) String key,
             Model model) {
         Reservation reservation = reservationService.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Reservation not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Reservierung nicht gefunden"));
         model.addAttribute("reservation", reservation);
 
         if (Boolean.TRUE.equals(authorized) && key != null) {
@@ -191,17 +191,17 @@ public class ReservationController {
         }
 
         if (reservation.getAccessType() != ReservationAccess.PRIVATE) {
-            model.addAttribute("error", "This reservation is public.");
+            model.addAttribute("error", "Diese Reservierung ist öffentlich.");
             return "reservation-private";
         }
 
         if (code == null) {
-            model.addAttribute("error", "Please provide the private access code.");
+            model.addAttribute("error", "Bitte geben Sie den privaten Zugangscode an.");
             return "reservation-private";
         }
 
         if (!code.equals(reservation.getAccessCode())) {
-            model.addAttribute("error", "Incorrect access code provided.");
+            model.addAttribute("error", "Falscher Zugangscode eingegeben.");
             return "reservation-private";
         }
 

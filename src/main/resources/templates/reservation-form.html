@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title th:text="${editMode ? 'Edit Reservation' : 'Create Reservation'}">Create Reservation</title>
+    <title th:text="${editMode ? 'Reservierung bearbeiten' : 'Reservierung erstellen'}">Reservierung erstellen</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 2rem; background-color: #f5f6f8; }
         h1 { color: #2d3e50; }
@@ -20,65 +20,65 @@
     </style>
 </head>
 <body>
-<h1 th:text="${editMode ? 'Edit Reservation' : 'Create Reservation'}">Create a Reservation</h1>
+<h1 th:text="${editMode ? 'Reservierung bearbeiten' : 'Reservierung erstellen'}">Eine Reservierung erstellen</h1>
 
 <form th:action="${editMode ? '/reservations/' + reservationId : '/reservations'}" th:object="${reservationForm}" method="post">
     <input type="hidden" th:if="${editMode}" name="key" th:value="${privateKey}">
     <div th:if="${#fields.hasGlobalErrors()}" class="global-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">Error</div>
 
-    <label for="title">Title</label>
-    <input type="text" id="title" th:field="*{title}" placeholder="Team sync meeting" required>
+    <label for="title">Titel</label>
+    <input type="text" id="title" th:field="*{title}" placeholder="Team-Sync-Meeting" required>
     <div class="field-error" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
 
-    <label for="location">Location</label>
-    <input type="text" id="location" th:field="*{location}" placeholder="Conference room" required>
+    <label for="location">Ort</label>
+    <input type="text" id="location" th:field="*{location}" placeholder="Konferenzraum" required>
     <div class="field-error" th:if="${#fields.hasErrors('location')}" th:errors="*{location}"></div>
 
-    <label for="roomNumber">Room Number (101-105)</label>
+    <label for="roomNumber">Raumnummer (101-105)</label>
     <select id="roomNumber" th:field="*{roomNumber}" required>
-        <option value="">Select a room</option>
-        <option value="101">Room 101</option>
-        <option value="102">Room 102</option>
-        <option value="103">Room 103</option>
-        <option value="104">Room 104</option>
-        <option value="105">Room 105</option>
+        <option value="">Raum auswählen</option>
+        <option value="101">Raum 101</option>
+        <option value="102">Raum 102</option>
+        <option value="103">Raum 103</option>
+        <option value="104">Raum 104</option>
+        <option value="105">Raum 105</option>
     </select>
     <div class="field-error" th:if="${#fields.hasErrors('roomNumber')}" th:errors="*{roomNumber}"></div>
 
-    <label for="description">Remarks (10-200 characters)</label>
-    <textarea id="description" th:field="*{description}" rows="3" placeholder="Enter remarks about the reservation (10-200 characters)" required></textarea>
+    <label for="description">Bemerkungen (10-200 Zeichen)</label>
+    <textarea id="description" th:field="*{description}" rows="3" placeholder="Geben Sie Bemerkungen zur Reservierung ein (10-200 Zeichen)" required></textarea>
     <div class="field-error" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
 
-    <label for="startTime">Start</label>
+    <label for="startTime">Beginn</label>
     <input type="datetime-local" id="startTime" th:field="*{startTime}" required>
     <div class="field-error" th:if="${#fields.hasErrors('startTime')}" th:errors="*{startTime}"></div>
 
-    <label for="endTime">End</label>
+    <label for="endTime">Ende</label>
     <input type="datetime-local" id="endTime" th:field="*{endTime}" required>
     <div class="field-error" th:if="${#fields.hasErrors('endTime')}" th:errors="*{endTime}"></div>
 
-    <label for="accessType">Access Type</label>
+    <label for="accessType">Zugriffstyp</label>
     <select id="accessType" th:field="*{accessType}">
         <option th:each="type : ${accessTypes}" th:value="${type}" th:text="${type}">PUBLIC</option>
     </select>
-    <small>Select "PRIVATE" to restrict access with a code.</small>
+    <small>Wählen Sie "PRIVATE" um den Zugriff mit einem Code zu beschränken.</small>
     <div class="field-error" th:if="${#fields.hasErrors('accessType')}" th:errors="*{accessType}"></div>
 
-    <label for="accessCode">Access Code</label>
-    <input type="text" id="accessCode" th:field="*{accessCode}" placeholder="Required for private reservations">
+    <label for="accessCode">Zugangscode</label>
+    <input type="text" id="accessCode" th:field="*{accessCode}" placeholder="Erforderlich für private Reservierungen">
     <div class="field-error" th:if="${#fields.hasErrors('accessCode')}" th:errors="*{accessCode}"></div>
 
     <section>
-        <h2>Participants</h2>
-        <small>Enter participant names separated by commas (e.g., "John Doe, Jane Smith, Max Müller")</small>
-        <label for="participantsText">Participant Names</label>
-        <textarea id="participantsText" th:field="*{participantsText}" rows="3" placeholder="John Doe, Jane Smith" required></textarea>
+        <h2>Teilnehmer</h2>
+        <small>Geben Sie die Namen der Teilnehmer durch Kommas getrennt ein (z.B. "Max Mustermann, Erika Musterfrau, Hans Müller")</small>
+        <label for="participantsText">Namen der Teilnehmer</label>
+        <textarea id="participantsText" th:field="*{participantsText}" rows="3" placeholder="Max Mustermann, Erika Musterfrau" required></textarea>
         <div class="field-error" th:if="${#fields.hasErrors('participantsText')}" th:errors="*{participantsText}"></div>
     </section>
 
     <div class="form-actions">
-        <button type="submit" th:text="${editMode ? 'Update Reservation' : 'Save Reservation'}">Save Reservation</button>
-        <a th:href="@{/}">Cancel</a>
+        <button type="submit" th:text="${editMode ? 'Reservierung aktualisieren' : 'Reservierung speichern'}">Reservierung speichern</button>
+        <a th:href="@{/}">Abbrechen</a>
     </div>
 </form>
 
