@@ -128,6 +128,8 @@ Beide Schlüssel werden mit **SecureRandom** kryptographisch sicher generiert.
 
 Das Zustandsdiagramm visualisiert die Navigation und Zustandsübergänge in der Webapplikation:
 
+![Zustandsdiagramm der Anwendung](diagrams/Zustandsdiagramm%20Bild.png)
+
 **Hauptzustände:**
 - **Index**: Startseite mit Übersicht aller Reservierungen
 - **CreateForm**: Formular zum Erstellen einer neuen Reservation
@@ -159,6 +161,8 @@ Das Zustandsdiagramm visualisiert die Navigation und Zustandsübergänge in der 
 ### Datenbankstruktur
 
 Das ERD zeigt die persistierten Entitäten und ihre Beziehungen:
+
+![Entity-Relationship-Diagramm (ERD)](diagrams/Entity-Relationship-Diagramm%20Bild.png)
 
 #### Entität: RESERVATIONS
 
@@ -206,6 +210,8 @@ Das ERD zeigt die persistierten Entitäten und ihre Beziehungen:
 ## 5. UML-Klassendiagramm
 
 ### Architektur-Übersicht
+
+![UML-Klassendiagramm](diagrams/UML-Klassendiagramm%20Bild.png)
 
 Die Anwendung folgt einer mehrschichtigen Architektur:
 
