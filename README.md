@@ -30,7 +30,7 @@ Reservationssystem für Sitzungs- und Veranstaltungsräume (Zimmer 101-105) mit 
 ## 🚀 Quick Start
 
 ### Voraussetzungen
-- Java 25+
+- Java 17+
 - Maven 3.6+
 
 ### Anwendung starten
@@ -105,9 +105,9 @@ Das Projekt enthält eine Docker Compose Konfiguration für eine MySQL Datenbank
 ## 🏗️ Technologie-Stack
 
 - **Framework**: Spring Boot 3.5.7
-- **Java Version**: 25
+- **Java Version**: 17
 - **Build Tool**: Maven
-- **Datenbank**: MySQL 9.5 (via Docker Compose) / H2 (In-Memory für Tests)
+- **Datenbank**: MySQL 8.0+ (via Docker Compose) / H2 (In-Memory für Tests)
 - **Template Engine**: Thymeleaf
 - **Persistenz**: Spring Data JPA
 - **Validierung**: Jakarta Bean Validation
@@ -130,7 +130,7 @@ M223-Terminkalender/
 │   │       ├── templates/          # Thymeleaf Templates
 │   │       └── application.properties
 │   └── test/
-│       └── java/                   # Unit Tests (14 Tests)
+│       └── java/                   # Unit Tests (19 Tests)
 ├── Doku/
 │   ├── Projektdokumentation_M223.md  # Hauptdokumentation
 │   ├── PDF_EXPORT_ANLEITUNG.md       # PDF Export Guide
@@ -178,10 +178,10 @@ Siehe `Doku/PDF_EXPORT_ANLEITUNG.md` für Anweisungen zum PDF-Export mit Pandoc,
 
 ## 🧪 Testing
 
-**Status**: ✅ Alle Tests bestanden (14/14)
+**Status**: ✅ Alle Tests bestanden (19/19)
 
 ```
-Tests run: 14, Failures: 0, Errors: 0, Skipped: 0
+Tests run: 19, Failures: 0, Errors: 0, Skipped: 0
 ```
 
 **Test Coverage:**
