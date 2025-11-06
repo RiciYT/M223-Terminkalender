@@ -290,7 +290,7 @@ class ReservationServiceTest {
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> reservationService.createReservation(reservation));
-        assertEquals("At least one participant is required", exception.getMessage());
+        assertEquals("Mindestens ein Teilnehmer ist erforderlich", exception.getMessage());
     }
 
     @Test
@@ -308,7 +308,7 @@ class ReservationServiceTest {
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> reservationService.createReservation(reservation));
-        assertEquals("Start time must be in the future", exception.getMessage());
+        assertEquals("Startzeit muss in der Zukunft liegen", exception.getMessage());
     }
 
     @Test
@@ -328,6 +328,6 @@ class ReservationServiceTest {
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> reservationService.createReservation(reservation));
-        assertEquals("Participant names may only contain letters and spaces", exception.getMessage());
+        assertEquals("Teilnehmernamen dürfen nur Buchstaben und Leerzeichen enthalten", exception.getMessage());
     }
 }

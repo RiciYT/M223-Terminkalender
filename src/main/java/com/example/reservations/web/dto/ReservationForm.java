@@ -23,37 +23,37 @@ public class ReservationForm {
     private static final Pattern PARTICIPANT_NAME_PATTERN =
             Pattern.compile("^[A-Za-zÄÖÜäöüß]+(?:\\s+[A-Za-zÄÖÜäöüß]+)*$");
 
-    @NotBlank(message = "Title is required")
+    @NotBlank(message = "Titel ist erforderlich")
     private String title;
 
-    @NotBlank(message = "Location is required")
+    @NotBlank(message = "Ort ist erforderlich")
     private String location;
 
-    @NotNull(message = "Room number is required")
-    @Min(value = 101, message = "Room number must be between 101 and 105")
-    @Max(value = 105, message = "Room number must be between 101 and 105")
+    @NotNull(message = "Raumnummer ist erforderlich")
+    @Min(value = 101, message = "Raumnummer muss zwischen 101 und 105 liegen")
+    @Max(value = 105, message = "Raumnummer muss zwischen 101 und 105 liegen")
     private Integer roomNumber;
 
-    @NotBlank(message = "Remarks are required")
-    @Size(min = 10, max = 200, message = "Remarks must be between 10 and 200 characters")
+    @NotBlank(message = "Bemerkungen sind erforderlich")
+    @Size(min = 10, max = 200, message = "Bemerkungen müssen zwischen 10 und 200 Zeichen lang sein")
     private String description;
 
-    @NotNull(message = "Start time is required")
-    @Future(message = "Start time must be in the future")
+    @NotNull(message = "Startzeit ist erforderlich")
+    @Future(message = "Startzeit muss in der Zukunft liegen")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime startTime;
 
-    @NotNull(message = "End time is required")
-    @Future(message = "End time must be in the future")
+    @NotNull(message = "Endzeit ist erforderlich")
+    @Future(message = "Endzeit muss in der Zukunft liegen")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime endTime;
 
-    @NotNull(message = "Access type is required")
+    @NotNull(message = "Zugriffstyp ist erforderlich")
     private ReservationAccess accessType = ReservationAccess.PUBLIC;
 
     private String accessCode;
 
-    @NotBlank(message = "Participants list is required")
+    @NotBlank(message = "Teilnehmerliste ist erforderlich")
     private String participantsText;
 
     public ReservationForm() {
@@ -92,7 +92,7 @@ public class ReservationForm {
                 .collect(Collectors.toList());
     }
 
-    @AssertTrue(message = "At least one participant is required")
+    @AssertTrue(message = "Mindestens ein Teilnehmer ist erforderlich")
     public boolean hasAtLeastOneParticipant() {
         return !parseParticipantNames().isEmpty();
     }
