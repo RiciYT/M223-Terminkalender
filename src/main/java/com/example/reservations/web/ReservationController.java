@@ -73,9 +73,11 @@ public class ReservationController {
     @PostMapping("/reservations")
     public String createReservation(
             @Valid @ModelAttribute("reservationForm") ReservationForm form,
-            BindingResult bindingResult) {
+            BindingResult bindingResult,
+            Model model) {
 
         if (bindingResult.hasErrors()) {
+            model.addAttribute("editMode", false);
             return "reservation-form";
         }
 
@@ -85,6 +87,7 @@ public class ReservationController {
             return "redirect:/reservations/" + saved.getId() + "/confirm";
         } catch (IllegalArgumentException | IllegalStateException ex) {
             bindingResult.reject("reservation.error", ex.getMessage());
+            model.addAttribute("editMode", false);
             return "reservation-form";
         }
     }
