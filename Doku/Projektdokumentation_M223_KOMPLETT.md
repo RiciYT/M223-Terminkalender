@@ -27,6 +27,7 @@ version: "1.0"
 7. [Testing und Validation](#7-testing-und-validation)
 8. [Build und Deployment](#8-build-und-deployment)
 9. [Versionsverwaltung](#9-versionsverwaltung)
+10. [Projektteam und Mitwirkende](#10-projektteam-und-mitwirkende)
 
 ---
 
@@ -483,6 +484,14 @@ Alle Entwicklungsschritte sind im Git-Log nachvollziehbar:
   - Vollständige Dokumentation
 
 ---
+
+## 10. Projektteam und Mitwirkende
+
+### Projektteam
+
+- Ricardo Santos Lopes — Projektleiter
+- Mathias Bäumli — Teampartner
+- Imad Chatila — Teampartner
 
 ## Anhang A: API-Endpunkte
 
