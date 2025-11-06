@@ -64,11 +64,16 @@ Das Projekt enthält eine Docker Compose Konfiguration für eine MySQL Datenbank
 
 #### MySQL Datenbank starten
 
-1. **Umgebungsvariablen konfigurieren** (optional):
-   ```bash
-   cp .env.example .env
-   # Bearbeite .env mit deinen gewünschten Werten
-   ```
+1. Optional: **Umgebungsvariablen setzen** (via `.env` oder direkt in Compose):
+    - Du kannst eine `.env` Datei im Projektroot anlegen, z. B.:
+      ```
+      MYSQL_ROOT_PASSWORD=rootpassword
+      MYSQL_DATABASE=reservations
+      MYSQL_USER=reservation_user
+      MYSQL_PASSWORD=change-me
+      MYSQL_PORT=3306
+      ```
+    - Ohne `.env` werden die in `docker-compose.yml` hinterlegten Standardwerte verwendet.
 
 2. **Docker Container starten**:
    ```bash
@@ -132,14 +137,19 @@ M223-Terminkalender/
 │   └── test/
 │       └── java/                   # Unit Tests (19 Tests)
 ├── Doku/
-│   ├── Projektdokumentation_M223.md  # Hauptdokumentation
-│   ├── PDF_EXPORT_ANLEITUNG.md       # PDF Export Guide
-│   └── diagrams/                     # UML Diagramme
-│       ├── state-diagram.*           # Zustandsdiagramm
-│       ├── erd-diagram.*             # Entity-Relationship
-│       └── class-diagram.*           # Klassendiagramm
-├── ABSCHLUSSBERICHT.md             # Implementierungsbericht
-└── README.md                       # Diese Datei
+│   ├── Projektdokumentation_M223_KOMPLETT.md   # Hauptdokumentation (Markdown)
+│   ├── Projektauftrag.pdf                      # Projektauftrag (Referenz)
+│   ├── diagrams/                                # UML Diagramme
+│   │   ├── Zustandsdiagramm Bild.png
+│   │   ├── Entity-Relationship-Diagramm Bild.png
+│   │   └── UML-Klassendiagramm Bild.png
+│   └── sql/
+│       ├── schema-example.sql
+│       └── seed-data-example.sql
+├── docker-compose.yml
+├── init.sql
+├── pom.xml
+└── README.md
 ```
 
 ## 🎯 API Endpoints
@@ -153,15 +163,17 @@ M223-Terminkalender/
 ### Protected Endpoints (Public Key)
 - `GET /reservations/{id}/public` - Public View (Read-Only)
 
-### Protected Endpoints (Private Key)
-- `GET /reservations/{id}/private?key={privateKey}` - Private View
+### Protected Endpoints (Private Bereich)
+
+- `GET /reservations/{id}/private?authorized=true&key={privateKey}` - Private View (voller Zugriff via Private Key)
+- `GET /reservations/{id}/private?code={accessCode}` - Private View (eingeschränkter Zugriff via Zugangscode)
 - `GET /reservations/{id}/edit?key={privateKey}` - Edit Formular
 - `POST /reservations/{id}?key={privateKey}` - Reservation aktualisieren
 - `POST /reservations/{id}/delete?key={privateKey}` - Reservation löschen
 
 ## 📚 Dokumentation
 
-Die vollständige Projektdokumentation befindet sich in `Doku/Projektdokumentation_M223.md` und enthält:
+Die vollständige Projektdokumentation befindet sich in `Doku/Projektdokumentation_M223_KOMPLETT.md` und enthält:
 
 1. Einleitung und Projektauftrag
 2. Anforderungsanalyse
@@ -170,11 +182,34 @@ Die vollständige Projektdokumentation befindet sich in `Doku/Projektdokumentati
 5. UML-Klassendiagramm
 6. Implementierungsdetails
 7. Testing und Validation
-8. Code-Snippets
+8. Build und Deployment
+9. Versionsverwaltung
+10. Projektteam und Mitwirkende
+
+Anhänge:
+
+- Anhang A: API-Endpunkte
+- Anhang B: Verwendete Technologien
 
 ### PDF Export
 
-Siehe `Doku/PDF_EXPORT_ANLEITUNG.md` für Anweisungen zum PDF-Export mit Pandoc, IntelliJ IDEA oder Online-Tools.
+Erzeuge die PDF aus der Markdown-Dokumentation mit Pandoc (aus dem Projekt-Root ausführen):
+
+```bash
+pandoc Doku/Projektdokumentation_M223_KOMPLETT.md -o Doku/Projektdokumentation_M223.pdf \
+  --from gfm \
+  --toc \
+  --pdf-engine=xelatex \
+  --resource-path=Doku \
+  -V geometry:margin=2cm \
+  -V linkcolor:blue \
+  -V colorlinks=true
+```
+
+Voraussetzungen: Pandoc + LaTeX (Windows z. B. MiKTeX oder TeX Live). Die Option `--resource-path=Doku` stellt sicher,
+dass die Bilder unter `Doku/diagrams` gefunden werden.
+
+Hinweis: Der ursprüngliche Projektauftrag liegt als Referenz unter `Doku/Projektauftrag.pdf`.
 
 ## 🧪 Testing
 
@@ -240,7 +275,11 @@ Tests run: 19, Failures: 0, Errors: 0, Skipped: 0
 
 ### Projektteam
 
-Dieses Projekt wurde im Rahmen des Moduls M223 entwickelt.
+- Ricardo Santos Lopes (GitHub: RiciYT) — Projektleiter
+- Mathias Bäumli — Teampartner
+- Imad Chatila — Teampartner
+
+Details siehe: `Doku/Projektdokumentation_M223_KOMPLETT.md` → Abschnitt "10. Projektteam und Mitwirkende"
 
 ### Rollen und Verantwortlichkeiten
 
@@ -259,18 +298,7 @@ Projekt für Bildungszwecke im Rahmen des Moduls 223.
 
 Bei Fragen oder Problemen:
 1. Konsultiere die Dokumentation in `Doku/`
-2. Prüfe den `ABSCHLUSSBERICHT.md`
+2. Öffne ein Issue im Repository oder kontaktiere das Projektteam
 3. Führe Tests aus: `./mvnw test`
 
-## ✅ Status
-
-**Projekt-Status**: ✅ ABGABEBEREIT
-
-Alle Anforderungen des Projektauftrags wurden erfolgreich implementiert und getestet.
-
----
-
-**Version**: 1.0  
-**Datum**: November 2025  
-**Modul**: M223 – Multiuser-Applikationen objektorientiert realisieren
 

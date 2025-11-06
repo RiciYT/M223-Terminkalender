@@ -2,17 +2,12 @@
 title: "M223 Terminkalender - Projektdokumentation"
 subtitle: "Multiuser-Applikationen objektorientiert realisieren"
 author: "Entwickelt für Modul 223"
-date: "November 2025"
-version: "1.0"
 ---
 
 # M223 Terminkalender - Projektdokumentation
 
 **Projekt:** M223 Terminkalender - Reservationssystem für Sitzungs- und Veranstaltungsräume  
-**Version:** 1.0  
-**Datum:** November 2025  
-**Modul:** M223 – Multiuser-Applikationen objektorientiert realisieren  
-**Status:** Abgabebereit
+**Modul:** M223 – Multiuser-Applikationen objektorientiert realisieren
 
 ---
 
@@ -129,7 +124,7 @@ Beide Schlüssel werden mit **SecureRandom** kryptographisch sicher generiert.
 
 Das Zustandsdiagramm visualisiert die Navigation und Zustandsübergänge in der Webapplikation:
 
-![Zustandsdiagramm der Anwendung](diagrams/Zustandsdiagramm%20Bild.png)
+![Zustandsdiagramm der Anwendung](diagrams/Zustandsdiagramm Bild.png)
 
 **Hauptzustände:**
 - **Index**: Startseite mit Übersicht aller Reservierungen
@@ -163,7 +158,7 @@ Das Zustandsdiagramm visualisiert die Navigation und Zustandsübergänge in der 
 
 Das ERD zeigt die persistierten Entitäten und ihre Beziehungen:
 
-![Entity-Relationship-Diagramm (ERD)](diagrams/Entity-Relationship-Diagramm%20Bild.png)
+![Entity-Relationship-Diagramm (ERD)](diagrams/Entity-Relationship-Diagramm Bild.png)
 
 #### Entität: RESERVATIONS
 
@@ -212,7 +207,7 @@ Das ERD zeigt die persistierten Entitäten und ihre Beziehungen:
 
 ### Architektur-Übersicht
 
-![UML-Klassendiagramm](diagrams/UML-Klassendiagramm%20Bild.png)
+![UML-Klassendiagramm](diagrams/UML-Klassendiagramm Bild.png)
 
 Die Anwendung folgt einer mehrschichtigen Architektur:
 
@@ -436,7 +431,8 @@ BUILD SUCCESS
 docker compose up -d
 ```
 
-**Konfiguration:** `.env` Datei für Credentials
+**Konfiguration:** Optional `.env` Datei für Credentials (alternativ werden die Standardwerte aus `docker-compose.yml`
+verwendet)
 
 ### 8.4 Deployment
 
@@ -469,27 +465,12 @@ Alle Entwicklungsschritte sind im Git-Log nachvollziehbar:
 - Testing
 - Documentation
 
-### 9.4 Versionshinweis
-
-**Aktuelle Version:** 1.0  
-**Release-Datum:** November 2025  
-**Status:** Abgabebereit für Modul M223
-
-**Änderungshistorie:**
-- v1.0 (Nov 2025): Initiale Implementierung aller Anforderungen
-  - CRUD-Funktionalität
-  - Schlüsselverwaltung
-  - Validierung und Konfliktprüfung
-  - Umfassende Tests
-  - Vollständige Dokumentation
-
----
 
 ## 10. Projektteam und Mitwirkende
 
 ### Projektteam
 
-- Ricardo Santos Lopes — Projektleiter
+- Ricardo Santos Lopes (GitHub: RiciYT) — Projektleiter
 - Mathias Bäumli — Teampartner
 - Imad Chatila — Teampartner
 
@@ -504,11 +485,13 @@ Alle Entwicklungsschritte sind im Git-Log nachvollziehbar:
 ### Protected Endpoints (Public Key)
 - `GET /reservations/{id}/public` - Public View
 
-### Protected Endpoints (Private Key)
-- `GET /reservations/{id}/private?key={key}` - Private View
-- `GET /reservations/{id}/edit?key={key}` - Edit Form
-- `POST /reservations/{id}?key={key}` - Update
-- `POST /reservations/{id}/delete?key={key}` - Delete
+### Protected Endpoints (Private Bereich)
+
+- `GET /reservations/{id}/private?authorized=true&key={privateKey}` - Private View (voller Zugriff via Private Key)
+- `GET /reservations/{id}/private?code={accessCode}` - Private View (eingeschränkter Zugriff via Zugangscode)
+- `GET /reservations/{id}/edit?key={privateKey}` - Edit Form (erfordert Private Key)
+- `POST /reservations/{id}?key={privateKey}` - Update (erfordert Private Key)
+- `POST /reservations/{id}/delete?key={privateKey}` - Delete (erfordert Private Key)
 
 ---
 
@@ -542,7 +525,7 @@ Das M223 Terminkalender Projekt erfüllt alle Anforderungen des Moduls:
 ✅ **Umfassende Tests** (19 Tests, alle bestanden)  
 ✅ **Vollständige Dokumentation**  
 
-Das Projekt ist produktionsreif und abgabebereit.
+Das Projekt erfüllt die definierten Anforderungen des Projektauftrags.
 
 ---
 
