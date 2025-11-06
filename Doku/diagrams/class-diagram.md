@@ -65,6 +65,7 @@ classDiagram
         +existsByRoomNumberAndStartTimeLessThanAndEndTimeGreaterThan(Integer, LocalDateTime, LocalDateTime) boolean
         +existsByStartTimeLessThanAndEndTimeGreaterThan(LocalDateTime, LocalDateTime) boolean
         +findByAccessType(ReservationAccess) List~Reservation~
+        +findByRoomNumber(Integer) List~Reservation~
     }
     
     class ReservationService {

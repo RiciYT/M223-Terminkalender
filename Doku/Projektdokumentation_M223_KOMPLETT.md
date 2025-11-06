@@ -54,7 +54,7 @@ Das Unternehmen verfügt über mehrere Sitzungs- und Veranstaltungsräume (Zimme
 - **Framework**: Spring Boot 3.5.7
 - **Java Version**: 17
 - **Build Tool**: Maven
-- **Datenbank**: MySQL 9.5 (Produktion) / H2 (Tests)
+- **Datenbank**: MySQL 8.4 (Produktion) / H2 (Tests)
 - **Template Engine**: Thymeleaf
 - **Persistenz**: Spring Data JPA
 - **Validierung**: Jakarta Bean Validation
@@ -101,12 +101,12 @@ Nach erfolgreicher Reservation werden zwei Schlüssel generiert:
 - **Public Key**: 
   - Ermöglicht Read-Only-Zugriff
   - Kann mit Teilnehmern geteilt werden
-  - 16 Bytes, Base64-kodiert (URL-sicher)
+  - 12 Bytes, Base64-kodiert (URL-sicher, 16 Zeichen)
   
 - **Private Key**: 
   - Ermöglicht Bearbeiten und Löschen der Reservation
   - Sollte nur der organisierenden Person bekannt sein
-  - 16 Bytes, Base64-kodiert (URL-sicher)
+  - 12 Bytes, Base64-kodiert (URL-sicher, 16 Zeichen)
   
 Beide Schlüssel werden mit **SecureRandom** kryptographisch sicher generiert.
 
@@ -335,7 +335,7 @@ Die Klasse `DataInitializer` lädt 2-3 Beispiel-Reservierungen beim ersten Start
 1. **Kryptographische Schlüsselgenerierung**
    - SecureRandom für Public/Private Keys
    - Base64 URL-safe Encoding
-   - 16 Bytes Länge (128 Bit)
+   - 12 Bytes Länge (96 Bit, ergibt 16 Zeichen)
 
 2. **Autorisierung**
    - Edit/Delete: Validierung des Private Keys
@@ -407,7 +407,7 @@ BUILD SUCCESS
 
 - Java 17+
 - Maven 3.6+
-- MySQL 9.5+ oder Docker
+- MySQL 8.0+ oder Docker
 
 ### 8.2 Build-Prozess
 
@@ -505,6 +505,7 @@ Alle Entwicklungsschritte sind im Git-Log nachvollziehbar:
 | Spring Data JPA | 3.5.7 | Persistenz Layer |
 | Spring Web MVC | 3.5.7 | Web Layer |
 | Thymeleaf | 3.5.7 | Template Engine |
+| MySQL Database | 8.4.7 | Production Database (via Docker) |
 | MySQL Connector | 9.5.0 | Database Driver |
 | Jakarta Validation | 3.5.7 | Bean Validation |
 | H2 Database | 2.4.240 | Test Database |
