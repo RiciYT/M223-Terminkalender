@@ -40,8 +40,8 @@ Die Hauptentität für Terminreservierungen.
 - `end_time`: Endzeit (muss nach Startzeit liegen)
 - `access_type`: Zugangstyp (PUBLIC oder PRIVATE)
 - `access_code`: Zugangscode (Pflicht bei PRIVATE)
-- `public_key`: Öffentlicher Schlüssel für Read-Only-Zugriff (kryptographisch sicher, 16 Bytes Base64)
-- `private_key`: Privater Schlüssel für Edit/Delete-Zugriff (kryptographisch sicher, 16 Bytes Base64)
+- `public_key`: Öffentlicher Schlüssel für Read-Only-Zugriff (kryptographisch sicher, 12 Bytes Base64, 16 Zeichen)
+- `private_key`: Privater Schlüssel für Edit/Delete-Zugriff (kryptographisch sicher, 12 Bytes Base64, 16 Zeichen)
 
 **Constraints:**
 - `room_number` zwischen 101 und 105
