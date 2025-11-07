@@ -1,8 +1,3 @@
----
-title: "M223 Terminkalender - Projektdokumentation"
-subtitle: "Multiuser-Applikationen objektorientiert realisieren"
-author: "Entwickelt für Modul 223"
----
 
 # M223 Terminkalender - Projektdokumentation
 
@@ -470,7 +465,7 @@ Alle Entwicklungsschritte sind im Git-Log nachvollziehbar:
 
 ### Projektteam
 
-- Ricardo Santos Lopes (GitHub: RiciYT) — Projektleiter
+- Ricardo Santos Lopes — Projektleiter
 - Mathias Bäumli — Teampartner
 - Imad Chatila — Teampartner
 
