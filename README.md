@@ -175,42 +175,6 @@ M223-Terminkalender/
 
 Die vollständige Projektdokumentation befindet sich in `Doku/Projektdokumentation_M223_KOMPLETT.md` und enthält:
 
-1. Einleitung und Projektauftrag
-2. Anforderungsanalyse
-3. UML-Zustandsdiagramm
-4. Entity-Relationship-Diagramm (ERD)
-5. UML-Klassendiagramm
-6. Implementierungsdetails
-7. Testing und Validation
-8. Build und Deployment
-9. Versionsverwaltung
-10. Projektteam und Mitwirkende
-
-Anhänge:
-
-- Anhang A: API-Endpunkte
-- Anhang B: Verwendete Technologien
-
-### PDF Export
-
-Erzeuge die PDF aus der Markdown-Dokumentation mit Pandoc (aus dem Projekt-Root ausführen):
-
-```bash
-pandoc Doku/Projektdokumentation_M223_KOMPLETT.md -o Doku/Projektdokumentation_M223.pdf \
-  --from gfm \
-  --toc \
-  --pdf-engine=xelatex \
-  --resource-path=Doku \
-  -V geometry:margin=2cm \
-  -V linkcolor:blue \
-  -V colorlinks=true
-```
-
-Voraussetzungen: Pandoc + LaTeX (Windows z. B. MiKTeX oder TeX Live). Die Option `--resource-path=Doku` stellt sicher,
-dass die Bilder unter `Doku/diagrams` gefunden werden.
-
-Hinweis: Der ursprüngliche Projektauftrag liegt als Referenz unter `Doku/Projektauftrag.pdf`.
-
 ## 🧪 Testing
 
 **Status**: ✅ Alle Tests bestanden (19/19)
@@ -268,37 +232,16 @@ Tests run: 19, Failures: 0, Errors: 0, Skipped: 0
 
 ## 👥 Team
 
-**Projekt:** M223 Terminkalender - Reservationssystem  
-**Modul:** 223 - Multiuser-Applikationen objektorientiert realisieren  
-**Institution:** Berufsbildungszentrum  
-**Entwicklungszeitraum:** Oktober - November 2025
-
-### Projektteam
-
-- Ricardo Santos Lopes (GitHub: RiciYT) — Projektleiter
+- Ricardo Santos Lopes — Projektleiter
 - Mathias Bäumli — Teampartner
 - Imad Chatila — Teampartner
 
 Details siehe: `Doku/Projektdokumentation_M223_KOMPLETT.md` → Abschnitt "10. Projektteam und Mitwirkende"
 
-### Rollen und Verantwortlichkeiten
-
-- **Backend-Entwicklung**: Spring Boot, JPA, REST-Endpunkte
-- **Frontend-Entwicklung**: Thymeleaf Templates, HTML/CSS
-- **Datenbank-Design**: MySQL Schema, Entity-Relationships
-- **Testing**: JUnit Tests, Integration Tests
-- **Dokumentation**: UML-Diagramme, Projektdokumentation
-- **DevOps**: Docker Setup, Build-Konfiguration
 
 ## 📄 Lizenz
 
 Projekt für Bildungszwecke im Rahmen des Moduls 223.
 
-## 🆘 Support
-
-Bei Fragen oder Problemen:
-1. Konsultiere die Dokumentation in `Doku/`
-2. Öffne ein Issue im Repository oder kontaktiere das Projektteam
-3. Führe Tests aus: `./mvnw test`
 
 
