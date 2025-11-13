@@ -33,28 +33,7 @@ Reservationssystem für Sitzungs- und Veranstaltungsräume (Zimmer 101-105) mit 
 - Java 17+
 - Maven 3.6+
 
-### Anwendung starten
-
-```bash
-./mvnw spring-boot:run
-```
-
-Die Anwendung läuft auf: http://localhost:8080
-
-### Tests ausführen
-
-```bash
-./mvnw test
-```
-
-### Package erstellen
-
-```bash
-./mvnw clean package
-java -jar target/reservation-0.0.1-SNAPSHOT.jar
-```
-
-### 🐳 Docker Setup (MySQL Database)
+### Anwendung starten mit 🐳 Docker (MySQL Database)
 
 Das Projekt enthält eine Docker Compose Konfiguration für eine MySQL Datenbank.
 
@@ -86,7 +65,7 @@ Das Projekt enthält eine Docker Compose Konfiguration für eine MySQL Datenbank
    docker compose logs mysql
    ```
 
-4. **Anwendung mit MySQL starten**:
+4. **Anwendung starten**:
    ```bash
    ./mvnw spring-boot:run
    ```
