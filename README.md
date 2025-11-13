@@ -116,7 +116,8 @@ M223-Terminkalender/
 │   └── test/
 │       └── java/                   # Unit Tests (19 Tests)
 ├── Doku/
-│   ├── Projektdokumentation_M223_KOMPLETT.md   # Hauptdokumentation (Markdown)
+│   ├── Projektdokumentation in Markdown.md
+│   ├── Projektdokumentation PDF Abgabe.md
 │   ├── Projektauftrag.pdf                      # Projektauftrag (Referenz)
 │   ├── diagrams/                                # UML Diagramme
 │   │   ├── Zustandsdiagramm Bild.png
@@ -149,25 +150,6 @@ M223-Terminkalender/
 - `GET /reservations/{id}/edit?key={privateKey}` - Edit Formular
 - `POST /reservations/{id}?key={privateKey}` - Reservation aktualisieren
 - `POST /reservations/{id}/delete?key={privateKey}` - Reservation löschen
-
-## 📚 Dokumentation
-
-Die vollständige Projektdokumentation befindet sich in `Doku/Projektdokumentation_M223_KOMPLETT.md` und enthält:
-
-## 🧪 Testing
-
-**Status**: ✅ Alle Tests bestanden (19/19)
-
-```
-Tests run: 19, Failures: 0, Errors: 0, Skipped: 0
-```
-
-**Test Coverage:**
-- ✅ CRUD Operations (Create, Read, Update, Delete)
-- ✅ Authorization (Valid/Invalid Private Key)
-- ✅ Validation (Time, Room Conflict, Access Code)
-- ✅ Key Generation (Uniqueness, Security)
-- ✅ Error Handling (Not Found, Invalid Input)
 
 ## 🔑 Verwendung
 
