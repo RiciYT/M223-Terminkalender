@@ -1,7 +1,7 @@
 
 # M223 Terminkalender - Projektdokumentation
 
-**Projekt:** M223 Terminkalender - Reservationssystem für Sitzungs- und Veranstaltungsräume  
+**Projekt:** Terminkalender - Reservationssystem für Sitzungs- und Veranstaltungsräume  
 **Modul:** M223 – Multiuser-Applikationen objektorientiert realisieren
 
 ---
@@ -119,7 +119,7 @@ Beide Schlüssel werden mit **SecureRandom** kryptographisch sicher generiert.
 
 Das Zustandsdiagramm visualisiert die Navigation und Zustandsübergänge in der Webapplikation:
 
-![Zustandsdiagramm der Anwendung](diagrams/Zustandsdiagramm Bild.png)
+![Zustandsdiagramm der Anwendung](https://i.imgur.com/WBq5nvz.png)
 
 **Hauptzustände:**
 - **Index**: Startseite mit Übersicht aller Reservierungen
@@ -153,7 +153,7 @@ Das Zustandsdiagramm visualisiert die Navigation und Zustandsübergänge in der 
 
 Das ERD zeigt die persistierten Entitäten und ihre Beziehungen:
 
-![Entity-Relationship-Diagramm (ERD)](diagrams/Entity-Relationship-Diagramm Bild.png)
+![Entity-Relationship-Diagramm (ERD)](https://i.imgur.com/jCzg0ak.png)
 
 #### Entität: RESERVATIONS
 
@@ -202,7 +202,7 @@ Das ERD zeigt die persistierten Entitäten und ihre Beziehungen:
 
 ### Architektur-Übersicht
 
-![UML-Klassendiagramm](diagrams/UML-Klassendiagramm Bild.png)
+![UML-Klassendiagramm](https://i.imgur.com/WEAJJrr.png)
 
 Die Anwendung folgt einer mehrschichtigen Architektur:
 
@@ -413,6 +413,9 @@ BUILD SUCCESS
 docker compose up -d
 ```
 
+**Konfiguration:** Optional `.env` Datei für Credentials (alternativ werden die Standardwerte aus `docker-compose.yml`
+verwendet)
+
 ### 8.3 Build-Prozess
 
 ```bash
@@ -426,8 +429,7 @@ docker compose up -d
 ./mvnw spring-boot:run
 ```
 
-**Konfiguration:** Optional `.env` Datei für Credentials (alternativ werden die Standardwerte aus `docker-compose.yml`
-verwendet)
+
 
 ### 8.4 Deployment
 
@@ -469,59 +471,3 @@ Alle Entwicklungsschritte sind im Git-Log nachvollziehbar:
 - Mathias Bäumli — Teampartner
 - Imad Chatila — Teampartner
 
-## Anhang A: API-Endpunkte
-
-### Public Endpoints
-- `GET /` - Startseite
-- `GET /access?key={key}` - Zugriff per Schlüssel
-- `GET /reservations/new` - Erstellen-Formular
-- `POST /reservations` - Reservation erstellen
-
-### Protected Endpoints (Public Key)
-- `GET /reservations/{id}/public` - Public View
-
-### Protected Endpoints (Private Bereich)
-
-- `GET /reservations/{id}/private?authorized=true&key={privateKey}` - Private View (voller Zugriff via Private Key)
-- `GET /reservations/{id}/private?code={accessCode}` - Private View (eingeschränkter Zugriff via Zugangscode)
-- `GET /reservations/{id}/edit?key={privateKey}` - Edit Form (erfordert Private Key)
-- `POST /reservations/{id}?key={privateKey}` - Update (erfordert Private Key)
-- `POST /reservations/{id}/delete?key={privateKey}` - Delete (erfordert Private Key)
-
----
-
-## Anhang B: Verwendete Technologien
-
-| Technologie | Version | Zweck |
-|-------------|---------|-------|
-| Spring Boot | 3.5.7 | Application Framework |
-| Spring Data JPA | 3.5.7 | Persistenz Layer |
-| Spring Web MVC | 3.5.7 | Web Layer |
-| Thymeleaf | 3.5.7 | Template Engine |
-| MySQL Database | 8.4.7 | Production Database (via Docker) |
-| MySQL Connector | 9.5.0 | Database Driver |
-| Jakarta Validation | 3.5.7 | Bean Validation |
-| H2 Database | 2.4.240 | Test Database |
-| JUnit 5 | 5.x | Testing Framework |
-
----
-
-## Fazit
-
-Das M223 Terminkalender Projekt erfüllt alle Anforderungen des Moduls:
-
-✅ **Maven-basiertes Spring Boot Projekt** mit allen erforderlichen Dependencies  
-✅ **Vollständige CRUD-Funktionalität** mit Schlüsselverwaltung  
-✅ **Umfassende Validierung** (Zeit, Zimmer, Format)  
-✅ **Konfliktprüfung** für Zimmerreservierungen  
-✅ **UML-Diagramme** (Zustand, Klassen, ERD)  
-✅ **Persistente Speicherung** in MySQL  
-✅ **Seed-Daten** für Testing  
-✅ **Umfassende Tests** (19 Tests, alle bestanden)  
-✅ **Vollständige Dokumentation**  
-
-Das Projekt erfüllt die definierten Anforderungen des Projektauftrags.
-
----
-
-**Ende der Dokumentation**
