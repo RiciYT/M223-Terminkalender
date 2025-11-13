@@ -406,7 +406,14 @@ BUILD SUCCESS
 - Maven 3.6+
 - MySQL 8.0+ oder Docker
 
-### 8.2 Build-Prozess
+### 8.2 Docker Setup
+
+**MySQL Datenbank starten:**
+```bash
+docker compose up -d
+```
+
+### 8.3 Build-Prozess
 
 ```bash
 # Tests ausführen
@@ -417,13 +424,6 @@ BUILD SUCCESS
 
 # Anwendung starten
 ./mvnw spring-boot:run
-```
-
-### 8.3 Docker Setup
-
-**MySQL Datenbank starten:**
-```bash
-docker compose up -d
 ```
 
 **Konfiguration:** Optional `.env` Datei für Credentials (alternativ werden die Standardwerte aus `docker-compose.yml`
