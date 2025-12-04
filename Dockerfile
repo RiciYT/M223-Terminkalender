@@ -13,7 +13,7 @@ RUN ./mvnw dependency:go-offline -B
 # Copy source code
 COPY src/ src/
 
-# Build the application
+# Build the application (tests are skipped as they should be run in CI/CD pipeline)
 RUN ./mvnw package -DskipTests -B
 
 # Stage 2: Create the runtime image

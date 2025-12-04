@@ -31,6 +31,7 @@ services:
     ports:
       - "8080:8080"
     environment:
+      # SSL is disabled for internal Docker network communication; enable for production if needed
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/${MYSQL_DATABASE:-reservations}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: ${MYSQL_USER:-reservation_user}
       SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD:-change-me}
